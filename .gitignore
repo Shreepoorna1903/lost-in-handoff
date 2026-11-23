@@ -1,0 +1,14 @@
+.venv
+.venv/
+__pycache__/
+.pytest_cache/
+*.sqlite
+.env
+.DS_Store
+vendor/
+dist/
+# run records: only the Colab pilot is committed; local scratch runs stay out
+runs/*
+!runs/colab_a100/
+runs 2/
+runs-*.zip

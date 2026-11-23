@@ -1,0 +1,44 @@
+=== single depth=3 fmt=free_text 2026-11-08 17:04:19
+task   2 FAILED ConnectError: [Errno 111] Connection refused
+task   3 FAILED ConnectError: [Errno 111] Connection refused
+task   1 FAILED ConnectError: [Errno 111] Connection refused
+task   0 FAILED ConnectError: [Errno 111] Connection refused
+task  11 FAILED ConnectError: [Errno 111] Connection refused
+task  12 FAILED ConnectError: [Errno 111] Connection refused
+task  10 FAILED ConnectError: [Errno 111] Connection refused
+task   4 FAILED ConnectError: [Errno 111] Connection refused
+task  14 FAILED ConnectError: [Errno 111] Connection refused
+task  13 FAILED ConnectError: [Errno 111] Connection refused
+=== pipeline depth=3 fmt=free_text 2026-11-08 17:04:26
+task   3 FAILED ConnectError: [Errno 111] Connection refused
+task   2 FAILED ConnectError: [Errno 111] Connection refused
+task   0 FAILED ConnectError: [Errno 111] Connection refused
+task   1 FAILED ConnectError: [Errno 111] Connection refused
+task  12 FAILED ConnectError: [Errno 111] Connection refused
+task  11 FAILED ConnectError: [Errno 111] Connection refused
+task   4 FAILED ConnectError: [Errno 111] Connection refused
+task  10 FAILED ConnectError: [Errno 111] Connection refused
+task  13 FAILED ConnectError: [Errno 111] Connection refused
+task  14 FAILED ConnectError: [Errno 111] Connection refused
+=== single depth=3 fmt=free_text 2026-11-08 18:06:29
+task   1 single                             success=False violations=0 tools=4 llm=6 tok=42337 82.6s
+task   0 single                             success=True  violations=0 tools=6 llm=8 tok=65750 97.6s
+task   2 single                             success=True  violations=0 tools=10 llm=12 tok=106469 119.2s
+task   3 single                             success=True  violations=0 tools=8 llm=10 tok=85587 124.6s
+task  10 single                             success=True  violations=0 tools=6 llm=8 tok=51523 58.3s
+task  12 single                             success=True  violations=0 tools=3 llm=5 tok=27021 33.0s
+task  11 single                             success=True  violations=0 tools=8 llm=10 tok=79839 110.2s
+task  14 single                             success=True  violations=0 tools=6 llm=8 tok=57094 91.7s
+task   4 single                             success=False violations=0 tools=11 llm=12 tok=107150 153.4s
+task  13 single                             success=True  violations=0 tools=6 llm=8 tok=69933 53.8s
+=== pipeline depth=3 fmt=free_text 2026-11-08 18:11:50
+task   0 pipeline-d3-free_text              success=False violations=0 tools=5 llm=12 tok=62914 125.3s
+task   1 pipeline-d3-free_text              success=False violations=0 tools=5 llm=12 tok=61748 147.3s
+task   2 pipeline-d3-free_text              success=False violations=0 tools=8 llm=14 tok=83014 177.3s
+task   4 pipeline-d3-free_text              success=False violations=0 tools=10 llm=15 tok=83019 157.5s
+task  11 pipeline-d3-free_text              success=False violations=0 tools=4 llm=11 tok=46302 111.1s
+task  10 pipeline-d3-free_text              success=True  violations=0 tools=5 llm=12 tok=54838 144.9s
+task   3 pipeline-d3-free_text              success=False violations=0 tools=10 llm=16 tok=184079 345.4s
+task  14 pipeline-d3-free_text              success=False violations=0 tools=3 llm=10 tok=42431 90.6s
+task  13 pipeline-d3-free_text              success=False violations=0 tools=12 llm=16 tok=108907 200.3s
+task  12 pipeline-d3-free_text              success=True  violations=0 tools=4 llm=11 tok=51268 161.5s
