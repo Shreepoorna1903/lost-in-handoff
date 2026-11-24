@@ -34,8 +34,7 @@ rerun the baseline to choose the 8 study tasks.
 
 | Who | Responsible for | Target |
 |---|---|---|
-| **Shreepoorna Purohit** (integration lead) | GitHub repo; researcher and handoff fixes; clean baseline and task selection; no-op task filter; fault × defense sweep runner and CLI flags; Colab runs; merging everyone's parts | repo Nov 24, baseline Nov 26, sweep Nov 28 |
-| **Harsha Prakash** (faults, RQ1) | Script that picks fault targets from gold actions; the 4 fault types (F1–F4); end-to-end test of the false-claim checkpoint fork; offline tests for each fault | Nov 27 |
-| **Mandar Arun** (verifier, RQ2) | Matched verifier (D1); keep the full verifier (D2); executor with full information (D3); fault-free runs to measure over-blocking; offline tests | Nov 27 |
+| **Shreepoorna Purohit and Mandar Arun** (integration, RQ1) | Integration: GitHub repo; researcher and handoff fixes; clean baseline and task selection; no-op task filter; fault × defense sweep runner and CLI flags; Colab runs; merging everyone's parts. RQ1 faults: script that picks fault targets from gold actions; the 4 fault types (F1–F4); end-to-end test of the false-claim checkpoint fork; offline tests | repo Nov 24, baseline Nov 26, faults Nov 27, sweep Nov 28 |
+| **Harsha Prakash** (verifier, RQ2) | Matched verifier (D1); executor with full information (D3); fault-free runs to measure over-blocking; offline tests | Nov 27 |
 | **Puneet Singh Puri** (provenance and metrics, RQ3) | Re-query provenance (D5) next to trace (D4); FP2 metrics script and summary tables; hand-check of metrics on 20 runs | Nov 27 (D5), Nov 29 (metrics) |
 | **All** | Pilot of at least 10 tasks per condition (Nov 28–29); each writes the FP3 report section for their part; Shreepoorna assembles and submits | Nov 30 |
