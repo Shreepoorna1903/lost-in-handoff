@@ -116,7 +116,9 @@ def test_numeric_ids_coerced_to_strings():
 def test_confirmation_dependent_tasks_excluded():
     ids = [t.task_id for t in load_tickets()]
     assert "5" not in ids and "9" not in ids and "0" in ids
-    assert ids[:10] == ["0", "1", "2", "3", "4", "10", "11", "12", "13", "14"]
+    # no-op tasks (10, 12, 50, 105) are filtered out: their gold actions leave the database unchanged
+    assert ids[:10] == ["0", "1", "2", "3", "4", "11", "13", "14", "15", "16"]
+    assert not {"10", "12", "50", "105"} & set(ids)
     assert len(load_tickets(exclude_dialogue=False)) - len(ids) == 17
 
 
@@ -183,3 +185,12 @@ def test_carry_forward_merges_facts_but_not_constraints():
     assert merged.constraints == []          # constraints are the model's job (RQ1)
     assert carry_forward_facts(None, researcher) == (researcher, 0)
     assert carry_forward_facts("not json", researcher) == (researcher, 0)
+
+
+def test_role_notes():
+    """Only write roles are told to carry out actions; the tool-less intake is told never to invent IDs."""
+    from handoff.topologies import INTAKE_NOTE, READ_ONLY_NOTE, TICKET_MODE_NOTE, _note
+    assert _note("single") == _note("executor") == TICKET_MODE_NOTE
+    assert _note("researcher") == READ_ONLY_NOTE and _note("intake") == INTAKE_NOTE
+    assert "Never make up or guess an ID" in INTAKE_NOTE and "exact IDs" not in INTAKE_NOTE
+    assert "carry out every requested action" not in READ_ONLY_NOTE + INTAKE_NOTE

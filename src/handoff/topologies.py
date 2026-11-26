@@ -53,7 +53,8 @@ ROLE_DESC = {
                        "will need.",
     "researcher": "You are the research specialist. First authenticate the customer (policy requires "
                   "it), then look up every order, product and item detail needed, and work out the "
-                  "exact item IDs, new item IDs, payment method ID and prices the executor will need.",
+                  "exact item IDs, new item IDs, payment method ID and prices the executor will need. "
+                  "You only look things up; the executor makes every change.",
     "account": "You are the account specialist. Authenticate the customer and look up their "
                "profile, orders and payment methods.",
     "catalog": "You are the catalog specialist. Look up order, product and item details and "
@@ -80,10 +81,42 @@ TICKET_MODE_NOTE = (
     "policy's confirmation rule. Do not ask for confirmation; carry out every requested action, then "
     "report what was done."
 )
+# Roles without write tools got TICKET_MODE_NOTE too, read "carry out every requested action, then
+# report what was done" literally, and wrote that the changes were made; the executor believed it and
+# did nothing (pilot tasks 0, 2, 11, 14). They get this note instead. The executor and single agent
+# keep TICKET_MODE_NOTE unchanged.
+READ_ONLY_NOTE = (
+    "This is a written ticket, not a live chat: nobody will answer questions. The customer has already "
+    "confirmed every action in the ticket in writing, so do not ask for confirmation. You cannot change "
+    "the store database: you have no write tools, and nothing you do cancels, modifies, returns, "
+    "exchanges or refunds anything. The executor, a later agent, makes every change. Never write that "
+    "an action has been done, processed, initiated or completed. Describe each change as an action the "
+    "executor still has to take, with the exact IDs it needs."
+)
+# The intake has no tools at all, so READ_ONLY_NOTE's "with the exact IDs it needs" would ask it for
+# IDs it cannot look up and invite invented ones. It gets this note instead: same ticket-mode and
+# no-action rules, but IDs only as written in the ticket.
+INTAKE_NOTE = (
+    "This is a written ticket, not a live chat: nobody will answer questions. The customer has already "
+    "confirmed every action in the ticket in writing, so do not ask for confirmation. You cannot change "
+    "the store database or look anything up: you have no tools. Later agents look up the details and "
+    "make every change. Never write that an action has been done, processed, initiated, completed or "
+    "verified. Describe each requested change as an action still to be taken. Copy any ID, name, email, "
+    "zip code or other detail exactly as the ticket writes it; if the ticket does not give an ID, say "
+    "that it still has to be looked up. Never make up or guess an ID."
+)
+WRITE_ROLES = ("single", "executor")
+
+
+def _note(role: str) -> str:
+    if role in WRITE_ROLES:
+        return TICKET_MODE_NOTE
+    return INTAKE_NOTE if role == "intake" else READ_ONLY_NOTE
 
 
 def _system(role: str, policy: str, fmt: str | None, cfg: RunConfig, last: bool) -> str:
-    s = (f"{ROLE_DESC[role]}\n\nStore policy:\n{policy}\n\n{TICKET_MODE_NOTE}\n\n"
+    note = _note(role)
+    s = (f"{ROLE_DESC[role]}\n\nStore policy:\n{policy}\n\n{note}\n\n"
          "Make at most one tool call at a time.")
     if fmt and not last:
         s += "\n\n" + H.instruction(fmt, cfg.provenance)
@@ -141,7 +174,7 @@ def _agent_node(role: str, tools: list[str], idx: int, n: int, fmt: str | None):
         last = idx == n - 1
         res = run_agent(name=role, system=_system(role, env.policy(), fmt, cfg, last),
                         user=_incoming(state, rt, idx == 0), tools=tools, env=env, cfg=cfg,
-                        usage=rt["usage"], original_request=rt["request"])
+                        usage=rt["usage"], original_request=rt["request"], wrap_up=not last)
         out: TeamState = {
             "transcripts": state.get("transcripts", []) + [{"agent": role, "messages": res.messages}],
             "tool_log": [r.to_dict() for r in env.log],
@@ -245,7 +278,7 @@ def _worker_node(name: str):
                         .replace("next agent", "supervisor"),
                         user=f"Instructions from the supervisor:\n\n{state['handoffs'][-1]['content']}",
                         tools=SUP_WORKERS[name], env=env, cfg=cfg, usage=rt["usage"],
-                        original_request=rt["request"])
+                        original_request=rt["request"], wrap_up=True)
         h = _make_handoff(rt, name, "supervisor", rt["fmt"], res,
                           [x for x in state.get("handoffs", []) if x["format"] == "full_context"
                            and x["to"] == "supervisor"])

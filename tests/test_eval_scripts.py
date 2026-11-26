@@ -41,3 +41,10 @@ def test_fault_induced_failure_is_paired_by_task():
 
 def test_error_records_count_as_failures():
     assert M.success({"task_id": "0", "status": "error"}) is False
+
+
+def test_no_op_tasks_still_score():
+    """load_tickets drops no-op tasks for running, but saved records for them (pilot tasks 10, 12) must
+    still be scored against their gold replay, not crash with KeyError."""
+    from handoff import metrics as M
+    assert M._gold_hash("10") and M._gold_hash("12")

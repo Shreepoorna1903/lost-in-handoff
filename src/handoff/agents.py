@@ -82,6 +82,7 @@ class Usage:
     empty_retries: int = 0
     continuations: int = 0
     handoff_retries: int = 0  # structured handoffs re-extracted for label-only facts
+    wrap_ups: int = 0  # extra tool-free calls to write a handoff after a turn-limited or empty ending
     truncated: int = 0  # calls that hit max_tokens_per_call
 
     def add(self, msg: AIMessage) -> None:
@@ -122,6 +123,13 @@ def _ser(m) -> dict:
 CONTINUE_NUDGE = ("If anything you were asked to do is still not done, continue now with tool calls. "
                   "Otherwise reply with your final message as instructed.")
 EMPTY_NUDGE = "Your last reply was empty. Continue: make your next tool call, or give your final answer."
+# Pilot: the researcher hit the turn limit (tasks 3, 4, 13) or ended with an empty reply (1, 12), so
+# the executor received "(turn limit reached)" or nothing. An agent that writes a handoff gets one
+# more call, with no tools, to write it. Identical in every condition.
+WRAP_UP_PROMPT = ("You cannot make any more tool calls. Write your final message for the next agent "
+                  "now, as instructed, using only what the tool results above show. If something is "
+                  "still unknown, say so.")
+TURN_LIMIT_TEXT = "(turn limit reached)"
 
 VERIFIER_PROMPT = """You are a verifier that gates write actions in a retail customer-service system.
 Approve the proposed action only if it is consistent with (1) the customer's original ticket and every
@@ -149,7 +157,10 @@ def verify(cfg: RunConfig, usage: Usage, original_request: str, env: ToolEnv,
 
 
 def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolEnv,
-              cfg: RunConfig, usage: Usage, original_request: str = "") -> AgentResult:
+              cfg: RunConfig, usage: Usage, original_request: str = "",
+              wrap_up: bool = False) -> AgentResult:
+    """`wrap_up`: this agent's final text becomes a handoff, so a turn-limited or empty ending gets
+    one extra tool-free call to write it."""
     schemas = env.schemas(tools)
     if cfg.provenance:
         schemas = schemas + [PROVENANCE_SCHEMA]
@@ -182,7 +193,15 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
             msgs.append(ToolMessage(_execute(name, tc, tools, env, cfg, usage, original_request),
                                     tool_call_id=tc["id"]))
     else:
-        final = "(turn limit reached)"
+        final = TURN_LIMIT_TEXT
+    if wrap_up and (final == TURN_LIMIT_TEXT or not final.strip()):
+        msgs.append(HumanMessage(WRAP_UP_PROMPT))
+        ai = cfg.llm(think=cfg.no_tool_think).invoke(msgs)  # unbound: it cannot call tools
+        usage.add(ai)
+        usage.wrap_ups += 1
+        msgs.append(ai)
+        if (ai.content or "").strip():
+            final = ai.content
     return AgentResult(final, [_ser(m) for m in msgs], msgs)
 
 

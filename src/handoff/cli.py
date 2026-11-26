@@ -42,7 +42,7 @@ def run(task: str = "0", topology: str = "pipeline", depth: int = 3, fmt: str = 
         constraints: str = "", model: str = "qwen3:4b", think: bool = True,
         provenance: bool = False, verifier: bool = False, budget: int = 30, out: str = "runs",
         show: bool = False):
-    tk = next(t for t in load_tickets() if t.task_id == task)
+    tk = next(t for t in load_tickets(exclude_noop=False) if t.task_id == task)  # any task by ID
     cond = Condition(topology, depth, fmt, [c for c in constraints.split(",") if c])
     r = run_ticket(tk, cond, _cfg(model, think, provenance, verifier, budget))
     fp = save(r, out)

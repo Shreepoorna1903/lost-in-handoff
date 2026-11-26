@@ -54,7 +54,8 @@ def condition_name(r: dict) -> str:
 
 @lru_cache(maxsize=None)
 def _gold_hash(task_id: str) -> str:
-    tickets = {t.task_id: t for t in load_tickets(exclude_dialogue=False)}
+    # every task, no-ops included: saved records (e.g. the pilot's tasks 10, 12) must still score
+    tickets = {t.task_id: t for t in load_tickets(exclude_dialogue=False, exclude_noop=False)}
     return gold_db_hash(tickets[task_id].expected_actions)[0]
 
 
