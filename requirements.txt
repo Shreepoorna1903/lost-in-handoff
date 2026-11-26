@@ -1,0 +1,13 @@
+# Versions we run with (Python 3.13). The project installs from pyproject.toml:
+#   uv pip install -e ".[dev]"
+# tau2 comes from vendor/tau2-bench at commit 57e54143025bec219b5726884651c98eede202e2 (see README).
+-e vendor/tau2-bench
+langgraph==1.2.16
+langchain-core==1.6.12
+langchain-ollama==1.1.0
+pydantic==2.14.1
+typer==0.27.3
+pandas==3.0.6
+deepdiff==9.1.0
+audioop-lts; python_version >= "3.13"
+pytest==9.1.1
