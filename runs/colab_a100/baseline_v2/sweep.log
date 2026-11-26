@@ -1,0 +1,22 @@
+=== single-clean 2026-11-26 22:43:07
+task   3 trial 0 ok    success=False 125.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task3__trial0.json
+task   0 trial 0 ok    success=True 182.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task0__trial0.json
+task   1 trial 0 ok    success=True 201.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task1__trial0.json
+task   2 trial 0 ok    success=False 226.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task2__trial0.json
+task  14 trial 0 ok    success=True 198.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task14__trial0.json
+task  11 trial 0 ok    success=False 155.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task11__trial0.json
+task  13 trial 0 ok    success=True 210.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task13__trial0.json
+task   4 trial 0 ok    success=True 362.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task4__trial0.json
+task  16 trial 0 ok    success=False 208.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task16__trial0.json
+task  15 trial 0 ok    success=True 113.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/single-clean/task15__trial0.json
+=== clean-D0 2026-11-26 22:54:37
+task   2 trial 0 ok    success=False 357.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task2__trial0.json
+task   0 trial 0 ok    success=True 361.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task0__trial0.json
+task   3 trial 0 ok    success=True 520.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task3__trial0.json
+task   1 trial 0 ok    success=False 698.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task1__trial0.json
+task   4 trial 0 ok    success=True 352.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task4__trial0.json
+task  13 trial 0 ok    success=True 411.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task13__trial0.json
+task  15 trial 0 ok    success=True 394.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task15__trial0.json
+task  11 trial 0 ok    success=True 430.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task11__trial0.json
+task  16 trial 0 ok    success=True 217.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task16__trial0.json
+task  14 trial 0 ok    success=False 833.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/baseline_v2/qwen3-8b/clean-D0/task14__trial0.json
