@@ -1,26 +1,20 @@
 #!/usr/bin/env bash
-# Clean-baseline sweep (no faults, no added constraints) over the first N tasks.
-# Usage: scripts/sweep_baseline.sh [model] [limit]
-# Progress: one line per task in runs/baseline/sweep.log; full results in runs/baseline/*.json
+# Clean-baseline sweep (no faults, no defenses) over the first N non-no-op tasks.
+# Usage: scripts/sweep_baseline.sh [model] [limit] [out_dir]
+# Records: <out_dir>/<model>/<condition>/task<ID>__trial0.json (resumes if rerun)
+# Progress: <out_dir>/sweep.log. Score afterwards with: python score_eval.py <out_dir>/<model>
 set -u
 cd "$(dirname "$0")/.."
 MODEL="${1:-qwen3:8b}"
 LIMIT="${2:-10}"
-LOG=runs/baseline/sweep.log
-mkdir -p runs/baseline
-
-# topology depth format
-CONDITIONS=(
-  "single 3 free_text"
-  "pipeline 3 structured"
-)
+OUT="${3:-runs}"
+LOG="$OUT/sweep.log"
+mkdir -p "$OUT"
 
 echo "=== sweep start $(date '+%F %T') model=$MODEL limit=$LIMIT" >> "$LOG"
-for spec in "${CONDITIONS[@]}"; do
-  read -r topo depth fmt <<< "$spec"
-  echo "=== $topo depth=$depth fmt=$fmt  $(date '+%T')" >> "$LOG"
-  .venv/bin/python -m handoff.cli baseline --topology "$topo" --depth "$depth" --fmt "$fmt" \
-      --model "$MODEL" --limit "$LIMIT" 2>&1 \
-    | grep -E --line-buffered "^task|solved|Traceback|Error|Usage:" >> "$LOG"
+for cond in single-clean clean-D0; do
+  echo "=== $cond  $(date '+%T')" >> "$LOG"
+  .venv/bin/python run_eval.py --condition "$cond" --model "$MODEL" --limit "$LIMIT" --out "$OUT" 2>&1 \
+    | grep -E --line-buffered "^task|Traceback|Error" >> "$LOG"
 done
-echo "=== sweep end $(date '+%F %T')" >> "$LOG"
+echo "=== sweep end $(date '+%F %T') model=$MODEL" >> "$LOG"

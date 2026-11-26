@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 
 from tau2.domains.retail.environment import get_tasks
 
-from handoff.env import WRITE_TOOLS
+from handoff.env import WRITE_TOOLS, ToolEnv, gold_db_hash
 
 
 @dataclass
@@ -63,15 +63,27 @@ def depends_on_confirmation_dialogue(task) -> bool:
     return "confirm" in text.lower()
 
 
+def is_noop(ticket: Ticket, initial_hash: str) -> bool:
+    """True if replaying the gold actions leaves the database unchanged.
+
+    Such a task passes even when the agents do nothing (pilot: the pipeline's only two passes were
+    no-op tasks), so it cannot show whether a fault caused a failure. In base: 10, 12, 50, 105.
+    """
+    return gold_db_hash(ticket.expected_actions)[0] == initial_hash
+
+
 def load_tickets(split: str = "base", require_write: bool = True,
-                 exclude_dialogue: bool = True) -> list[Ticket]:
+                 exclude_dialogue: bool = True, exclude_noop: bool = True) -> list[Ticket]:
     out = []
+    initial_hash = ToolEnv().db_hash() if exclude_noop else ""
     for t in get_tasks(split):
         if exclude_dialogue and depends_on_confirmation_dialogue(t):
             continue
         actions = [a.model_dump() for a in (t.evaluation_criteria.actions or [])]
         tk = Ticket(task_id=t.id, request=_ticket_text(t), expected_actions=actions)
         if require_write and not tk.expected_writes:
+            continue
+        if exclude_noop and is_noop(tk, initial_hash):
             continue
         out.append(tk)
     return out
