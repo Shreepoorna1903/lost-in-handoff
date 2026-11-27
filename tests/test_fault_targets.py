@@ -6,13 +6,16 @@ from functools import lru_cache
 from pathlib import Path
 
 import pytest
+from typing import get_args
+from tau2.domains.retail.data_model import OrderStatus
 
 from handoff.conditions import FAULT_TARGETS_FILE, fault_targets
 from handoff.env import ALL_TOOLS, ToolEnv
 from handoff.tasks import load_tickets
 
 ROOT = Path(__file__).resolve().parents[1]
-TOOL_KEYS = {"tool", "occurrence", "path", "true_value", "wrong_value", "args"}
+TOOL_KEYS = {"tool", "occurrence", "paths", "true_value", "wrong_value", "args"}
+ORDER_STATUSES = set(get_args(OrderStatus))  # tau2's real order statuses
 F4_KEYS = {"hop", "true_value", "false_value"}
 
 
@@ -69,6 +72,7 @@ def test_every_task_has_all_four_faults():
             assert set(t[f]) == TOOL_KEYS, (tid, f)
             assert t[f]["true_value"] != t[f]["wrong_value"], (tid, f)
             assert type(t[f]["true_value"]) is type(t[f]["wrong_value"]), (tid, f)
+            assert t[f]["paths"] and all(isinstance(p, list) and p for p in t[f]["paths"]), (tid, f)
         assert set(t["F4"]) == F4_KEYS and t["F4"]["hop"] == 1, tid
 
 
@@ -78,13 +82,16 @@ def test_each_path_exists_in_the_real_tool_output(tid):
         e = TARGETS[tid][f]
         c = _call(tid, e)
         assert c["args"] == e["args"], (tid, f)
-        assert _walk(json.loads(c["output"]), e["path"]) == e["true_value"], (tid, f)
+        out = json.loads(c["output"])
+        for path in e["paths"]:
+            assert _walk(out, path) == e["true_value"], (tid, f, path)
 
 
 @pytest.mark.parametrize("tid", sorted(TARGETS, key=int))
 def test_f2_swaps_in_another_valid_id(tid):
     e = TARGETS[tid]["F2"]
-    assert e["path"][-1] == "item_id" and e["wrong_value"] != e["true_value"]
+    assert all(p[-1] == "item_id" or p[-2] == "item_ids" for p in e["paths"])
+    assert e["wrong_value"] != e["true_value"]
     assert _is_item_id(e["wrong_value"])
     order = json.loads(_call(tid, e)["output"])
     assert e["wrong_value"] not in {it["item_id"] for it in order["items"]}
@@ -96,19 +103,35 @@ def test_f3_field_is_not_used_by_any_gold_action(tid):
     e = TARGETS[tid]["F3"]
     assert e["true_value"] not in _gold_strings(tid)
     for a in TICKETS[tid].expected_actions:
-        assert e["path"][-1] not in a["arguments"], (tid, a["name"])
+        for path in e["paths"]:
+            assert path[-1] not in a["arguments"], (tid, a["name"], path)
 
 
 @pytest.mark.parametrize("tid", sorted(TARGETS, key=int))
-def test_f1_hits_a_value_the_gold_write_depends_on(tid):
-    """F1 must change a value that decides the gold write, or it behaves like the F3 control: the
-    availability of the gold new item, or the status of the order the gold write acts on."""
+def test_f1_is_the_status_of_the_order_the_gold_write_acts_on(tid):
+    """F1 flips a real order status, on the order of the gold write, from the status that write needs
+    (exchange / return: delivered; modify / cancel: pending) to one under which it is not allowed.
+    A value no write depends on would make F1 behave like the F3 control."""
     e = TARGETS[tid]["F1"]
-    w = next(a for a in TICKETS[tid].expected_actions if a["arguments"].get("item_ids"))["arguments"]
-    if e["path"][-1] == "available":
-        assert e["path"][1] in w["new_item_ids"] and e["true_value"] is True
-    else:
-        assert e["path"] == ["status"] and e["args"]["order_id"] == w["order_id"]
+    w = next(a for a in TICKETS[tid].expected_actions if a["arguments"].get("item_ids"))
+    assert e["tool"] == "get_order_details" and e["paths"] == [["status"]]
+    assert e["args"]["order_id"] == w["arguments"]["order_id"]
+    assert {e["true_value"], e["wrong_value"]} <= ORDER_STATUSES
+    needs = "delivered" if w["name"] in ("exchange_delivered_order_items",
+                                          "return_delivered_order_items") else "pending"
+    assert e["true_value"] == needs and e["wrong_value"] != needs
+
+
+@pytest.mark.parametrize("tid", sorted(TARGETS, key=int))
+def test_f2_leaves_no_copy_of_the_true_id(tid):
+    """With every path in F2's `paths` replaced, the order output no longer shows the true ID anywhere."""
+    e = TARGETS[tid]["F2"]
+    out = json.loads(_call(tid, e)["output"])
+    assert e["true_value"] in json.dumps(out)
+    for path in e["paths"]:
+        _walk(out, path[:-1])[path[-1]] = e["wrong_value"]
+    assert e["true_value"] not in json.dumps(out)
+    assert json.dumps(out).count(e["wrong_value"]) == len(e["paths"])
 
 
 @pytest.mark.parametrize("tid", sorted(TARGETS, key=int))

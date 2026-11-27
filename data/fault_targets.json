@@ -1,26 +1,34 @@
 {
   "0": {
     "F1": {
-      "tool": "get_product_details",
+      "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "variants",
-        "7706410293",
-        "available"
+      "paths": [
+        [
+          "status"
+        ]
       ],
-      "true_value": true,
-      "wrong_value": false,
+      "true_value": "delivered",
+      "wrong_value": "pending",
       "args": {
-        "product_id": "1656367028"
+        "order_id": "#W2378156"
       }
     },
     "F2": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "items",
-        2,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          2,
+          "item_id"
+        ],
+        [
+          "fulfillments",
+          0,
+          "item_ids",
+          2
+        ]
       ],
       "true_value": "1151293680",
       "wrong_value": "1340995114",
@@ -31,9 +39,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 135",
       "wrong_value": "Suite 935",
@@ -49,26 +59,34 @@
   },
   "1": {
     "F1": {
-      "tool": "get_product_details",
-      "occurrence": 2,
-      "path": [
-        "variants",
-        "7747408585",
-        "available"
+      "tool": "get_order_details",
+      "occurrence": 1,
+      "paths": [
+        [
+          "status"
+        ]
       ],
-      "true_value": true,
-      "wrong_value": false,
+      "true_value": "delivered",
+      "wrong_value": "pending",
       "args": {
-        "product_id": "4896585277"
+        "order_id": "#W2378156"
       }
     },
     "F2": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "items",
-        3,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          3,
+          "item_id"
+        ],
+        [
+          "fulfillments",
+          0,
+          "item_ids",
+          3
+        ]
       ],
       "true_value": "4983901480",
       "wrong_value": "2791467853",
@@ -79,9 +97,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 135",
       "wrong_value": "Suite 935",
@@ -99,8 +119,10 @@
     "F1": {
       "tool": "get_order_details",
       "occurrence": 5,
-      "path": [
-        "status"
+      "paths": [
+        [
+          "status"
+        ]
       ],
       "true_value": "delivered",
       "wrong_value": "pending",
@@ -111,10 +133,18 @@
     "F2": {
       "tool": "get_order_details",
       "occurrence": 5,
-      "path": [
-        "items",
-        1,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          1,
+          "item_id"
+        ],
+        [
+          "fulfillments",
+          0,
+          "item_ids",
+          1
+        ]
       ],
       "true_value": "4602305039",
       "wrong_value": "1304426904",
@@ -125,9 +155,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 5,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 135",
       "wrong_value": "Suite 935",
@@ -143,26 +175,28 @@
   },
   "3": {
     "F1": {
-      "tool": "get_product_details",
-      "occurrence": 1,
-      "path": [
-        "variants",
-        "9647292434",
-        "available"
+      "tool": "get_order_details",
+      "occurrence": 3,
+      "paths": [
+        [
+          "status"
+        ]
       ],
-      "true_value": true,
-      "wrong_value": false,
+      "true_value": "pending",
+      "wrong_value": "delivered",
       "args": {
-        "product_id": "9523456873"
+        "order_id": "#W4776164"
       }
     },
     "F2": {
       "tool": "get_order_details",
       "occurrence": 3,
-      "path": [
-        "items",
-        0,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          0,
+          "item_id"
+        ]
       ],
       "true_value": "8349118980",
       "wrong_value": "1176194968",
@@ -173,9 +207,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 3,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 135",
       "wrong_value": "Suite 935",
@@ -191,26 +227,28 @@
   },
   "4": {
     "F1": {
-      "tool": "get_product_details",
+      "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "variants",
-        "9647292434",
-        "available"
+      "paths": [
+        [
+          "status"
+        ]
       ],
-      "true_value": true,
-      "wrong_value": false,
+      "true_value": "pending",
+      "wrong_value": "delivered",
       "args": {
-        "product_id": "9523456873"
+        "order_id": "#W6247578"
       }
     },
     "F2": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "items",
-        0,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          0,
+          "item_id"
+        ]
       ],
       "true_value": "3799046073",
       "wrong_value": "1176194968",
@@ -221,9 +259,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 135",
       "wrong_value": "Suite 935",
@@ -241,8 +281,10 @@
     "F1": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "status"
+      "paths": [
+        [
+          "status"
+        ]
       ],
       "true_value": "delivered",
       "wrong_value": "pending",
@@ -253,10 +295,18 @@
     "F2": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "items",
-        0,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          0,
+          "item_id"
+        ],
+        [
+          "fulfillments",
+          0,
+          "item_ids",
+          0
+        ]
       ],
       "true_value": "4579334072",
       "wrong_value": "1434748144",
@@ -267,9 +317,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 572",
       "wrong_value": "Suite 372",
@@ -287,8 +339,10 @@
     "F1": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "status"
+      "paths": [
+        [
+          "status"
+        ]
       ],
       "true_value": "delivered",
       "wrong_value": "pending",
@@ -299,10 +353,18 @@
     "F2": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "items",
-        0,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          0,
+          "item_id"
+        ],
+        [
+          "fulfillments",
+          0,
+          "item_ids",
+          0
+        ]
       ],
       "true_value": "4579334072",
       "wrong_value": "1434748144",
@@ -313,9 +375,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 572",
       "wrong_value": "Suite 372",
@@ -333,8 +397,10 @@
     "F1": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "status"
+      "paths": [
+        [
+          "status"
+        ]
       ],
       "true_value": "delivered",
       "wrong_value": "pending",
@@ -345,10 +411,18 @@
     "F2": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "items",
-        1,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          1,
+          "item_id"
+        ],
+        [
+          "fulfillments",
+          0,
+          "item_ids",
+          1
+        ]
       ],
       "true_value": "1421289881",
       "wrong_value": "1151293680",
@@ -359,9 +433,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 1,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 572",
       "wrong_value": "Suite 372",
@@ -377,26 +453,28 @@
   },
   "15": {
     "F1": {
-      "tool": "get_product_details",
-      "occurrence": 1,
-      "path": [
-        "variants",
-        "3613716226",
-        "available"
+      "tool": "get_order_details",
+      "occurrence": 3,
+      "paths": [
+        [
+          "status"
+        ]
       ],
-      "true_value": true,
-      "wrong_value": false,
+      "true_value": "pending",
+      "wrong_value": "delivered",
       "args": {
-        "product_id": "7363354090"
+        "order_id": "#W5199551"
       }
     },
     "F2": {
       "tool": "get_order_details",
       "occurrence": 3,
-      "path": [
-        "items",
-        0,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          0,
+          "item_id"
+        ]
       ],
       "true_value": "1615379700",
       "wrong_value": "1262139877",
@@ -407,9 +485,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 3,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 640",
       "wrong_value": "Suite 440",
@@ -427,8 +507,10 @@
     "F1": {
       "tool": "get_order_details",
       "occurrence": 3,
-      "path": [
-        "status"
+      "paths": [
+        [
+          "status"
+        ]
       ],
       "true_value": "delivered",
       "wrong_value": "pending",
@@ -439,10 +521,18 @@
     "F2": {
       "tool": "get_order_details",
       "occurrence": 3,
-      "path": [
-        "items",
-        1,
-        "item_id"
+      "paths": [
+        [
+          "items",
+          1,
+          "item_id"
+        ],
+        [
+          "fulfillments",
+          0,
+          "item_ids",
+          1
+        ]
       ],
       "true_value": "2554056026",
       "wrong_value": "1007724142",
@@ -453,9 +543,11 @@
     "F3": {
       "tool": "get_order_details",
       "occurrence": 3,
-      "path": [
-        "address",
-        "address2"
+      "paths": [
+        [
+          "address",
+          "address2"
+        ]
       ],
       "true_value": "Suite 640",
       "wrong_value": "Suite 440",

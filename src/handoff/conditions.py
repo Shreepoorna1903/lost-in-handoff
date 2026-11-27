@@ -95,7 +95,7 @@ def _load_fault_targets() -> dict:
 def fault_targets(task_id: str, fault: str) -> dict:
     """Where to plant `fault` in this task, from data/fault_targets.json (scripts/pick_fault_targets.py).
 
-    F1-F3: tool, occurrence, path, true_value, wrong_value (and args, the targeted gold call's arguments).
+    F1-F3: tool, occurrence, paths (a list of paths), true_value, wrong_value (and args, the targeted gold call's arguments).
     F4: hop, true_value, false_value.
     """
     if fault not in FAULTS:

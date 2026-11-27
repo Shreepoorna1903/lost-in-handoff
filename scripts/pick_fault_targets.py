@@ -7,19 +7,20 @@ For each task we replay its gold actions on a fresh ToolEnv, so every read outpu
 agents would see, and pick targets from the gold write the faults should break. W is the first gold
 write that takes item IDs (every study task has one); R is the gold `get_order_details` call for W's order.
 
-  F1 corrupted value  A non-ID value the gold write depends on, flipped to a wrong value of the same type.
-                      Exchange / modify (W has new_item_ids): the new item's `available` flag in its
-                      get_product_details output, True -> False, so the right variant looks unavailable.
-                      Return / cancel: the order `status` in R ("delivered" <-> "pending"), which decides
-                      which write is allowed. Prices are not used: no gold write takes a price argument,
-                      so a wrong price would act like the F3 control (it changes no write).
-  F2 wrong valid ID   W's first item_id in R's `items`, swapped for another variant of the same product:
-                      a real item ID in the database, not in the order, not in any gold argument.
+  F1 corrupted value  R's order `status`, "delivered" <-> "pending", in every task. The policy allows
+                      exchange and return only on delivered orders and modify and cancel only on pending
+                      ones, so the status decides which write is right. Prices are not used: no gold write
+                      takes a price argument, so a wrong price would act like the F3 control. (An item's
+                      `available` flag was tried first, but "false" appears on many variants, so the
+                      planted value could not be traced through handoffs.)
+  F2 wrong valid ID   W's first item_id, swapped for another variant of the same product (a real item ID in
+                      the database, not in the order, not in any gold argument) in every place R shows it:
+                      its `items` entry and each `fulfillments` list, so R never shows the true ID.
   F3 control          R's shipping `address.address2`, which no gold action uses.
   F4 false claim      In the researcher -> executor handoff (hop 1): W's first new_item_id (else its first
                       item_id), replaced by another variant of the same product.
 
-Each tool-level entry has the agreed fields (tool, occurrence, path, true_value, wrong_value) plus `args`,
+Each tool-level entry has the agreed fields (tool, occurrence, paths, true_value, wrong_value) plus `args`,
 the arguments of the targeted gold call. ToolEnv matches faults by occurrence only (the n-th successful
 call to `tool`), so `args` lets the runner check it hit the intended call; `--check` reports how often the
 n-th call in clean runs had those arguments.
@@ -38,6 +39,7 @@ from handoff.tasks import Ticket, load_tickets
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "fault_targets.json"
 N_TASKS = 10
+STATUS_FLIP = {"delivered": "pending", "pending": "delivered"}
 
 
 def replay_reads(tk: Ticket) -> list[dict]:
@@ -83,8 +85,16 @@ def _other_variant(product_id: str, avoid: set[str]) -> str:
     return sorted(v for v in variants if v not in avoid)[0]
 
 
-def _entry(call: dict, path: list, true_value, wrong_value) -> dict:
-    return {"tool": call["tool"], "occurrence": call["occurrence"], "path": path,
+def id_paths(order: dict, item_id: str) -> list[list]:
+    """Every path in a get_order_details output that holds `item_id`."""
+    paths = [["items", i, "item_id"] for i, it in enumerate(order["items"]) if it["item_id"] == item_id]
+    for j, f in enumerate(order.get("fulfillments", [])):
+        paths += [["fulfillments", j, "item_ids", k] for k, x in enumerate(f["item_ids"]) if x == item_id]
+    return paths
+
+
+def _entry(call: dict, paths: list[list], true_value, wrong_value) -> dict:
+    return {"tool": call["tool"], "occurrence": call["occurrence"], "paths": paths,
             "true_value": true_value, "wrong_value": wrong_value, "args": call["args"]}
 
 
@@ -108,26 +118,21 @@ def pick(tk: Ticket) -> dict:
     in_order = {it["item_id"] for it in order["items"]}
     targets: dict[str, dict] = {}
 
-    # F1: a decision-relevant non-ID value
-    if wa.get("new_item_ids"):
-        new = wa["new_item_ids"][0]
-        p = _first(calls, "get_product_details", lambda c: new in json.loads(c["output"])["variants"])
-        avail = json.loads(p["output"])["variants"][new]["available"]
-        targets["F1"] = _entry(p, ["variants", new, "available"], avail, not avail)
-    else:
-        status = order["status"]
-        targets["F1"] = _entry(r, ["status"], status, "pending" if status == "delivered" else "delivered")
+    # F1: the order status, which decides which write the policy allows
+    status = order["status"]
+    if status not in STATUS_FLIP:
+        raise ValueError(f"task {tk.task_id}: order {wa['order_id']} has status {status!r}")
+    targets["F1"] = _entry(r, [["status"]], status, STATUS_FLIP[status])
 
-    # F2: a used ID swapped for another valid one
+    # F2: a used ID swapped for another valid one, everywhere the order shows it
     old = wa["item_ids"][0]
-    i = next(k for k, it in enumerate(order["items"]) if it["item_id"] == old)
-    pid = order["items"][i]["product_id"]
+    pid = next(it["product_id"] for it in order["items"] if it["item_id"] == old)
     f2 = _other_variant(pid, {old} | in_order | gold)
-    targets["F2"] = _entry(r, ["items", i, "item_id"], old, f2)
+    targets["F2"] = _entry(r, id_paths(order, old), old, f2)
 
     # F3: control, a field no gold action uses
     a2 = order["address"]["address2"]
-    targets["F3"] = _entry(r, ["address", "address2"], a2, _suite(a2))
+    targets["F3"] = _entry(r, [["address", "address2"]], a2, _suite(a2))
 
     # F4: a value the researcher hands the executor
     true4 = (wa.get("new_item_ids") or wa["item_ids"])[0]
