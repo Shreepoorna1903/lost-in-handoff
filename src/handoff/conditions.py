@@ -40,7 +40,8 @@ DEFENSES = {
     "D3": {"label": "executor with full information, no verifier", "config": {}, "built": False,
            "owner": "Harsha"},
     "D4": {"label": "provenance tags, trace", "config": {"provenance": True}, "built": True},
-    "D5": {"label": "provenance tags, re-query", "config": {}, "built": False, "owner": "Puneet"},
+    "D5": {"label": "provenance tags, re-query", "config": {"provenance": True, "provenance_requery": True},
+           "built": True},
 }
 
 FIXED = {"depth": 3, "fmt": "free_text"}  # pipeline shape and handoff format, same in every condition

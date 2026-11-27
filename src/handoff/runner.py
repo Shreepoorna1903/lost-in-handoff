@@ -56,6 +56,7 @@ def _score(ticket: Ticket, cond: Condition, cfg: RunConfig, env: ToolEnv, state:
         "no_tool_think": cfg.no_tool_think,
         "sampling": {"think": cfg.sampling_think, "no_think": cfg.sampling_no_think, "seed": cfg.seed},
         "provenance": cfg.provenance,
+        "provenance_requery": cfg.provenance_requery,
         "verifier": cfg.verifier,
         # fired: the fault changed a tool output (or, for a false claim, the handoff was rewritten).
         # A run whose fault never fired did not test the fault; score_eval reports these separately.

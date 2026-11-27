@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 from langchain_ollama import ChatOllama
 
-from handoff.env import ToolEnv
+from handoff.env import GENERIC_TOOLS, READ_TOOLS, ToolEnv
 
 PROVENANCE_TOOL = "get_tool_call_record"
 PROVENANCE_SCHEMA = {
@@ -27,6 +27,19 @@ PROVENANCE_SCHEMA = {
                        "required": ["call_id"]},
     },
 }
+# D5: same tool name and [call #N] tags as D4, but the call is re-run on the current database
+# instead of returning the logged output. Only read calls can be re-run.
+PROVENANCE_REQUERY_SCHEMA = {
+    "type": "function",
+    "function": {
+        "name": PROVENANCE_TOOL,
+        "description": "Re-run an earlier read-only tool call by its number (the N in [call #N]) "
+        "against the current store database and return the fresh output, to check a claim "
+        "against its source.",
+        "parameters": PROVENANCE_SCHEMA["function"]["parameters"],
+    },
+}
+REQUERYABLE_TOOLS = READ_TOOLS + GENERIC_TOOLS
 
 
 @dataclass
@@ -54,6 +67,9 @@ class RunConfig:
     # the reply counts as final (agents announced "Let me apply the changes" and stopped, task 3).
     max_continuations: int = 1
     provenance: bool = False
+    # D5: with provenance on, get_tool_call_record re-runs read call #N on the current database
+    # instead of returning its logged output (D4). Off by default; has no effect without provenance.
+    provenance_requery: bool = False
     verifier: bool = False
 
     handoff_max_tokens: int = 4096  # cap on structured-handoff extraction (guards runaway JSON)
@@ -84,6 +100,7 @@ class Usage:
     handoff_retries: int = 0  # structured handoffs re-extracted for label-only facts
     wrap_ups: int = 0  # extra tool-free calls to write a handoff after a turn-limited or empty ending
     truncated: int = 0  # calls that hit max_tokens_per_call
+    requeries: int = 0  # D5 re-runs of a logged read call (also counted in tool_calls)
 
     def add(self, msg: AIMessage) -> None:
         self.llm_calls += 1
@@ -163,7 +180,7 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
     one extra tool-free call to write it."""
     schemas = env.schemas(tools)
     if cfg.provenance and tools:  # an agent with no tools has no tool calls to look up
-        schemas = schemas + [PROVENANCE_SCHEMA]
+        schemas = schemas + [PROVENANCE_REQUERY_SCHEMA if cfg.provenance_requery else PROVENANCE_SCHEMA]
     # decided by the role's environment tools, so adding the provenance tool never flips it
     llm = cfg.llm(think=cfg.think if tools else cfg.no_tool_think)
     if schemas:
@@ -208,6 +225,8 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
 def _execute(agent: str, tc: dict, tools: list[str], env: ToolEnv, cfg: RunConfig,
              usage: Usage, original_request: str) -> str:
     tool, args = tc["name"], tc["args"] or {}
+    if tool == PROVENANCE_TOOL and cfg.provenance and cfg.provenance_requery:
+        return _requery(agent, args.get("call_id"), env, cfg, usage)
     if tool == PROVENANCE_TOOL and cfg.provenance:
         i = args.get("call_id")
         rec = next((r for r in env.log if r.step == i), None)
@@ -221,3 +240,29 @@ def _execute(agent: str, tc: dict, tools: list[str], env: ToolEnv, cfg: RunConfi
     usage.tool_calls += 1
     out = env.call(agent, tool, args, tools)
     return f"[call #{env.log[-1].step}] {out}" if cfg.provenance else out
+
+
+def _requery(agent: str, call_id, env: ToolEnv, cfg: RunConfig, usage: Usage) -> str:
+    """D5: re-run logged read call #call_id on the current database, as `agent`.
+
+    The re-run goes through ToolEnv.call, so it is logged (same tool and args as the original, after
+    it) and a tool fault, which fires only on the first matching call, does not fire again: the agent
+    sees the true value. It counts toward the shared tool-call budget. The access check allows only
+    the original call's tool, so the executor can re-run the researcher's lookup and nothing else.
+    Writes are never re-run; the check is by tool name, since a denied write attempt is logged with
+    is_write False."""
+    try:
+        i = int(call_id)
+    except (TypeError, ValueError):
+        return f"Error: no tool call #{call_id}"
+    rec = next((r for r in env.log if r.step == i), None)
+    if rec is None:
+        return f"Error: no tool call #{i}"
+    if rec.tool not in REQUERYABLE_TOOLS:
+        return f"Error: call #{i} ({rec.tool}) is not a read call; only read calls can be re-run."
+    if usage.tool_calls >= cfg.tool_call_budget:
+        return "Error: tool-call budget for this ticket is exhausted. Finish now."
+    usage.tool_calls += 1
+    usage.requeries += 1
+    out = env.call(agent, rec.tool, dict(rec.args), [rec.tool])
+    return f"[call #{env.log[-1].step}] {out}"
