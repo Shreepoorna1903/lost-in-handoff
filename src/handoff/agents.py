@@ -249,8 +249,9 @@ def _requery(agent: str, call_id, env: ToolEnv, cfg: RunConfig, usage: Usage) ->
     it) and a tool fault, which fires only on the first matching call, does not fire again: the agent
     sees the true value. It counts toward the shared tool-call budget. The access check allows only
     the original call's tool, so the executor can re-run the researcher's lookup and nothing else.
-    Writes are never re-run; the check is by tool name, since a denied write attempt is logged with
-    is_write False."""
+    Failed calls are never re-run: an access-denied call is logged too, and re-running it would hand
+    the agent output its role cannot read. Writes are never re-run; the check is by tool name, since a
+    denied write attempt is logged with is_write False."""
     try:
         i = int(call_id)
     except (TypeError, ValueError):
@@ -258,6 +259,8 @@ def _requery(agent: str, call_id, env: ToolEnv, cfg: RunConfig, usage: Usage) ->
     rec = next((r for r in env.log if r.step == i), None)
     if rec is None:
         return f"Error: no tool call #{i}"
+    if rec.error:  # includes access-denied calls, which are logged too: re-running one would bypass access
+        return f"Error: call #{i} failed; only successful read calls can be re-run."
     if rec.tool not in REQUERYABLE_TOOLS:
         return f"Error: call #{i} ({rec.tool}) is not a read call; only read calls can be re-run."
     if usage.tool_calls >= cfg.tool_call_budget:

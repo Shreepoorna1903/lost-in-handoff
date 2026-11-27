@@ -77,6 +77,18 @@ def test_requery_never_reruns_a_write():
     assert out.startswith("Error") and len(env.log) == 1
 
 
+def test_requery_never_reruns_a_denied_read():
+    """The executor has no read tools: a denied get_order_details is logged as call #N, and re-running
+    #N must not hand it the order."""
+    env, t = _f1_env()
+    denied = env.call("executor", t["tool"], dict(t["args"]), EXECUTOR_TOOLS)
+    assert denied.startswith("Error") and env.log[1].error and len(env.log) == 2
+    usage = Usage()
+    out = _lookup(RunConfig(provenance=True, provenance_requery=True), env, usage, 1)
+    assert out == "Error: call #1 failed; only successful read calls can be re-run."
+    assert len(env.log) == 2 and usage.tool_calls == 0 and usage.requeries == 0
+
+
 @pytest.mark.parametrize("bad", [7, "x", None])
 def test_requery_unknown_call(bad):
     env, _ = _f1_env()
