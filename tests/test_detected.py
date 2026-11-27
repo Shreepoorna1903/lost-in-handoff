@@ -138,3 +138,14 @@ def test_provenance_lookups_counted_only_with_provenance():
     _add_executor_call(r, PROVENANCE_TOOL, {"call_id": 1})
     _add_executor_call(r, PROVENANCE_TOOL, {"call_id": 2})
     assert M.provenance_lookups(r) == 2
+
+
+def test_verifier_blocked_planted_is_the_upper_bound_to_named():
+    """F4-D2 task 0: the verifier objected to the planted keyboard by description ("linear switches
+    instead of clicky"), not by ID, so named is False but the blocked write carried the planted ID."""
+    r = _rec("F4-D2", "0")
+    assert M.detection_signals(r)["verifier_named"] is False
+    assert M.verifier_blocked_planted(r) is True and M.detected(r) is False  # not part of detected
+    assert M.verifier_blocked_planted(_rec("F4-D2", "13")) is True
+    assert M.verifier_blocked_planted(_rec("F4-D0", "0")) is False  # no verifier, no block
+    assert M.verifier_blocked_planted(_rec("F1-D2", "13")) is None  # word-valued fault

@@ -1,0 +1,726 @@
+[
+ {
+  "id": 1,
+  "condition": "F4-D2",
+  "task": "13",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D2/task13__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "4579334072",
+   "false_value": "2366567022"
+  },
+  "gold_writes": [
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W5490111",
+     "item_ids": [
+      "4579334072",
+      "6117189161",
+      "4947717507"
+     ],
+     "payment_method_id": "credit_card_3124723"
+    }
+   }
+  ]
+ },
+ {
+  "id": 2,
+  "condition": "F4-D2",
+  "task": "0",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D2/task0__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "7706410293",
+   "false_value": "1421289881"
+  },
+  "gold_writes": [
+   {
+    "tool": "exchange_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "1151293680",
+      "4983901480"
+     ],
+     "new_item_ids": [
+      "7706410293",
+      "7747408585"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "condition": "F4-D2",
+  "task": "3",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D2/task3__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "9647292434",
+   "false_value": "2060066974"
+  },
+  "gold_writes": [
+   {
+    "tool": "modify_pending_order_items",
+    "args": {
+     "order_id": "#W4776164",
+     "item_ids": [
+      "8349118980"
+     ],
+     "new_item_ids": [
+      "9647292434"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "condition": "F4-D2",
+  "task": "15",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D2/task15__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "3613716226",
+   "false_value": "1437889264"
+  },
+  "gold_writes": [
+   {
+    "tool": "modify_pending_order_items",
+    "args": {
+     "order_id": "#W5199551",
+     "item_ids": [
+      "1615379700"
+     ],
+     "new_item_ids": [
+      "3613716226"
+     ],
+     "payment_method_id": "paypal_5364164"
+    }
+   }
+  ]
+ },
+ {
+  "id": 5,
+  "condition": "F4-D0",
+  "task": "0",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D0/task0__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "7706410293",
+   "false_value": "1421289881"
+  },
+  "gold_writes": [
+   {
+    "tool": "exchange_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "1151293680",
+      "4983901480"
+     ],
+     "new_item_ids": [
+      "7706410293",
+      "7747408585"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 6,
+  "condition": "F4-D0",
+  "task": "11",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D0/task11__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "4579334072",
+   "false_value": "2366567022"
+  },
+  "gold_writes": [
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W5490111",
+     "item_ids": [
+      "4579334072",
+      "1421289881",
+      "6117189161",
+      "4947717507"
+     ],
+     "payment_method_id": "credit_card_3124723"
+    }
+   },
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W7387996",
+     "item_ids": [
+      "5796612084"
+     ],
+     "payment_method_id": "paypal_9497703"
+    }
+   }
+  ]
+ },
+ {
+  "id": 7,
+  "condition": "F4-D0",
+  "task": "16",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D0/task16__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "2554056026",
+   "false_value": "1631806422"
+  },
+  "gold_writes": [
+   {
+    "tool": "cancel_pending_order",
+    "args": {
+     "order_id": "#W5199551",
+     "reason": "no longer needed"
+    }
+   },
+   {
+    "tool": "cancel_pending_order",
+    "args": {
+     "order_id": "#W8665881",
+     "reason": "no longer needed"
+    }
+   },
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W9389413",
+     "item_ids": [
+      "2554056026"
+     ],
+     "payment_method_id": "paypal_5364164"
+    }
+   }
+  ]
+ },
+ {
+  "id": 8,
+  "condition": "F4-D4",
+  "task": "3",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F4-D4/task3__trial0.json",
+  "fault": "F4",
+  "fault_target": {
+   "hop": 1,
+   "true_value": "9647292434",
+   "false_value": "2060066974"
+  },
+  "gold_writes": [
+   {
+    "tool": "modify_pending_order_items",
+    "args": {
+     "order_id": "#W4776164",
+     "item_ids": [
+      "8349118980"
+     ],
+     "new_item_ids": [
+      "9647292434"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 9,
+  "condition": "F2-D2",
+  "task": "3",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F2-D2/task3__trial0.json",
+  "fault": "F2",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 3,
+   "paths": [
+    [
+     "items",
+     0,
+     "item_id"
+    ]
+   ],
+   "true_value": "8349118980",
+   "wrong_value": "1176194968",
+   "args": {
+    "order_id": "#W4776164"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "modify_pending_order_items",
+    "args": {
+     "order_id": "#W4776164",
+     "item_ids": [
+      "8349118980"
+     ],
+     "new_item_ids": [
+      "9647292434"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 10,
+  "condition": "F2-D2",
+  "task": "16",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F2-D2/task16__trial0.json",
+  "fault": "F2",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 3,
+   "paths": [
+    [
+     "items",
+     1,
+     "item_id"
+    ],
+    [
+     "fulfillments",
+     0,
+     "item_ids",
+     1
+    ]
+   ],
+   "true_value": "2554056026",
+   "wrong_value": "1007724142",
+   "args": {
+    "order_id": "#W9389413"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "cancel_pending_order",
+    "args": {
+     "order_id": "#W5199551",
+     "reason": "no longer needed"
+    }
+   },
+   {
+    "tool": "cancel_pending_order",
+    "args": {
+     "order_id": "#W8665881",
+     "reason": "no longer needed"
+    }
+   },
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W9389413",
+     "item_ids": [
+      "2554056026"
+     ],
+     "payment_method_id": "paypal_5364164"
+    }
+   }
+  ]
+ },
+ {
+  "id": 11,
+  "condition": "F2-D2",
+  "task": "0",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F2-D2/task0__trial0.json",
+  "fault": "F2",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 1,
+   "paths": [
+    [
+     "items",
+     2,
+     "item_id"
+    ],
+    [
+     "fulfillments",
+     0,
+     "item_ids",
+     2
+    ]
+   ],
+   "true_value": "1151293680",
+   "wrong_value": "1340995114",
+   "args": {
+    "order_id": "#W2378156"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "exchange_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "1151293680",
+      "4983901480"
+     ],
+     "new_item_ids": [
+      "7706410293",
+      "7747408585"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 12,
+  "condition": "F2-D0",
+  "task": "2",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F2-D0/task2__trial0.json",
+  "fault": "F2",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 5,
+   "paths": [
+    [
+     "items",
+     1,
+     "item_id"
+    ],
+    [
+     "fulfillments",
+     0,
+     "item_ids",
+     1
+    ]
+   ],
+   "true_value": "4602305039",
+   "wrong_value": "1304426904",
+   "args": {
+    "order_id": "#W2378156"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "4602305039",
+      "4202497723",
+      "9408160950"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 13,
+  "condition": "F2-D4",
+  "task": "2",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F2-D4/task2__trial0.json",
+  "fault": "F2",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 5,
+   "paths": [
+    [
+     "items",
+     1,
+     "item_id"
+    ],
+    [
+     "fulfillments",
+     0,
+     "item_ids",
+     1
+    ]
+   ],
+   "true_value": "4602305039",
+   "wrong_value": "1304426904",
+   "args": {
+    "order_id": "#W2378156"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "4602305039",
+      "4202497723",
+      "9408160950"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 14,
+  "condition": "F2-D4",
+  "task": "1",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F2-D4/task1__trial0.json",
+  "fault": "F2",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 1,
+   "paths": [
+    [
+     "items",
+     3,
+     "item_id"
+    ],
+    [
+     "fulfillments",
+     0,
+     "item_ids",
+     3
+    ]
+   ],
+   "true_value": "4983901480",
+   "wrong_value": "2791467853",
+   "args": {
+    "order_id": "#W2378156"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "exchange_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "4983901480"
+     ],
+     "new_item_ids": [
+      "7747408585"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 15,
+  "condition": "F1-D2",
+  "task": "0",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F1-D2/task0__trial0.json",
+  "fault": "F1",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 1,
+   "paths": [
+    [
+     "status"
+    ]
+   ],
+   "true_value": "delivered",
+   "wrong_value": "pending",
+   "args": {
+    "order_id": "#W2378156"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "exchange_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "1151293680",
+      "4983901480"
+     ],
+     "new_item_ids": [
+      "7706410293",
+      "7747408585"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 16,
+  "condition": "F1-D2",
+  "task": "13",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F1-D2/task13__trial0.json",
+  "fault": "F1",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 1,
+   "paths": [
+    [
+     "status"
+    ]
+   ],
+   "true_value": "delivered",
+   "wrong_value": "pending",
+   "args": {
+    "order_id": "#W5490111"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W5490111",
+     "item_ids": [
+      "4579334072",
+      "6117189161",
+      "4947717507"
+     ],
+     "payment_method_id": "credit_card_3124723"
+    }
+   }
+  ]
+ },
+ {
+  "id": 17,
+  "condition": "F1-D0",
+  "task": "0",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F1-D0/task0__trial0.json",
+  "fault": "F1",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 1,
+   "paths": [
+    [
+     "status"
+    ]
+   ],
+   "true_value": "delivered",
+   "wrong_value": "pending",
+   "args": {
+    "order_id": "#W2378156"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "exchange_delivered_order_items",
+    "args": {
+     "order_id": "#W2378156",
+     "item_ids": [
+      "1151293680",
+      "4983901480"
+     ],
+     "new_item_ids": [
+      "7706410293",
+      "7747408585"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 18,
+  "condition": "F3-D4",
+  "task": "3",
+  "file": "runs/colab_a100/pilot/qwen3-8b/F3-D4/task3__trial0.json",
+  "fault": "F3",
+  "fault_target": {
+   "tool": "get_order_details",
+   "occurrence": 3,
+   "paths": [
+    [
+     "address",
+     "address2"
+    ]
+   ],
+   "true_value": "Suite 135",
+   "wrong_value": "Suite 935",
+   "args": {
+    "order_id": "#W4776164"
+   }
+  },
+  "gold_writes": [
+   {
+    "tool": "modify_pending_order_items",
+    "args": {
+     "order_id": "#W4776164",
+     "item_ids": [
+      "8349118980"
+     ],
+     "new_item_ids": [
+      "9647292434"
+     ],
+     "payment_method_id": "credit_card_9513926"
+    }
+   }
+  ]
+ },
+ {
+  "id": 19,
+  "condition": "clean-D2",
+  "task": "11",
+  "file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task11__trial0.json",
+  "fault": null,
+  "fault_target": null,
+  "gold_writes": [
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W5490111",
+     "item_ids": [
+      "4579334072",
+      "1421289881",
+      "6117189161",
+      "4947717507"
+     ],
+     "payment_method_id": "credit_card_3124723"
+    }
+   },
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W7387996",
+     "item_ids": [
+      "5796612084"
+     ],
+     "payment_method_id": "paypal_9497703"
+    }
+   }
+  ]
+ },
+ {
+  "id": 20,
+  "condition": "clean-D2",
+  "task": "16",
+  "file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task16__trial0.json",
+  "fault": null,
+  "fault_target": null,
+  "gold_writes": [
+   {
+    "tool": "cancel_pending_order",
+    "args": {
+     "order_id": "#W5199551",
+     "reason": "no longer needed"
+    }
+   },
+   {
+    "tool": "cancel_pending_order",
+    "args": {
+     "order_id": "#W8665881",
+     "reason": "no longer needed"
+    }
+   },
+   {
+    "tool": "return_delivered_order_items",
+    "args": {
+     "order_id": "#W9389413",
+     "item_ids": [
+      "2554056026"
+     ],
+     "payment_method_id": "paypal_5364164"
+    }
+   }
+  ]
+ }
+]
