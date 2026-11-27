@@ -152,6 +152,12 @@ def test_executor_is_told_to_check_its_sources(monkeypatch, cond):
     assert EXECUTOR_PROVENANCE_INSTRUCTION in ex["system"] and PROVENANCE_TOOL in ex["tools"]
 
 
+def test_customer_stated_values_need_no_tag():
+    """Task 16 cancels with a reason from the ticket; it has no [call #N] source and must not be refused."""
+    assert "Values the customer stated in the request" in EXECUTOR_PROVENANCE_INSTRUCTION
+    assert "need no tag" in EXECUTOR_PROVENANCE_INSTRUCTION
+
+
 @pytest.mark.parametrize("cond", ["clean-D0", "clean-D2"])
 def test_executor_without_provenance_is_unchanged(monkeypatch, cond):
     ex = _role(_prompts(monkeypatch, cond), "you are the executor")

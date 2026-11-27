@@ -82,13 +82,15 @@ PROVENANCE_INSTRUCTION = (
 )
 # D4/D5, the last agent (the executor), which writes no handoff and so never got PROVENANCE_INSTRUCTION:
 # in the pilot it called get_tool_call_record in 1 of 49 D4 runs. Same wording in D4 and D5, so the
-# conditions differ only in what the tool returns (the logged output vs a fresh re-run).
+# conditions differ only in what the tool returns (the logged output vs a fresh re-run). Values the
+# customer gives (task 16's cancel reason) have no tool source, so they are exempt from the tag rule.
 EXECUTOR_PROVENANCE_INSTRUCTION = (
     "Facts in the handoff are tagged with the tool call they came from, e.g. [call #4]. Before each "
     "write, check every ID and value you are about to use against its source: call "
     "get_tool_call_record with that call number and compare. If the source shows a different ID or "
-    "value, use what the source shows. If a value has no tag, or its source does not support it, do "
-    "not write it; report the problem instead."
+    "value, use what the source shows. Values the customer stated in the request, such as a "
+    "cancellation reason, need no tag. If any other ID or value has no tag, or its source does not "
+    "support it, do not write it; report the problem instead."
 )
 
 
