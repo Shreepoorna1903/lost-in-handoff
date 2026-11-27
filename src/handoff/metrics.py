@@ -13,6 +13,8 @@ Implemented:
   cost                  mean seconds, tokens, LLM calls, tool calls, truncated calls per run
   provenance_lookups    get_tool_call_record calls per run (D4/D5); score_eval reports runs with at least
                         one lookup and the mean, so an unused tool is visible next to the D4/D5 results
+                        (from usage.lookups when the record has it, else counted from the transcripts)
+  tagged_handoff        D4/D5: the handoff to the executor carries a [call #N] tag
 
   detected              an agent noticed the planted fact: any of the signals below
                         (detection_signals). None for clean, no_target and not-fired runs.
@@ -222,6 +224,8 @@ def provenance_lookups(r: dict) -> int | None:
     called, D4 ~ D5 says nothing about tracing versus re-querying."""
     if not r.get("provenance") or "state" not in r:
         return None
+    if "lookups" in r.get("usage", {}):  # records made after usage.lookups was added
+        return r["usage"]["lookups"]
     return sum(1 for _, m in _messages(r) for tc in m.get("tool_calls") or [] if tc.get("name") == PROVENANCE_TOOL)
 
 
@@ -236,6 +240,16 @@ def verifier_blocked_planted(r: dict) -> bool | None:
     t = fault_targets(r["task_id"], r["fault"])
     planted = str(t["false_value"] if r["fault"] == "F4" else t["wrong_value"])
     return any(planted in json.dumps(b["args"]) for b in verifier_blocks(r))
+
+
+def tagged_handoff(r: dict) -> bool | None:
+    """D4/D5: the researcher's handoff to the executor carries at least one [call #N] tag. None when
+    provenance was off. Report the share next to D4/D5 results: untagged handoffs give the executor
+    nothing to look up."""
+    if not r.get("provenance") or "state" not in r:
+        return None
+    hs = [h for h in r["state"].get("handoffs", []) if h.get("to") == "executor"]
+    return bool(hs) and "[call #" in hs[-1].get("content", "")
 
 
 def detected(r: dict) -> bool | None:

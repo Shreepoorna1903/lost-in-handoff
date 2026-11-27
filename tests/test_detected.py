@@ -157,3 +157,19 @@ def test_detected_without_requery_drops_only_the_requery_signal():
     r = _rec("F4-D2", "13")  # detected through the verifier naming the false ID
     assert M.detected(r) is True and M.detected_without_requery(r) is True
     assert M.detected_without_requery(_rec("clean-D0", "0")) is None
+
+
+def test_lookups_prefer_the_usage_counter():
+    r = copy.deepcopy(_rec("F1-D4", "0"))
+    r["usage"]["lookups"] = 3
+    assert M.provenance_lookups(r) == 3
+
+
+def test_tagged_handoff_only_with_provenance():
+    assert M.tagged_handoff(_rec("F1-D0", "0")) is None
+    r = copy.deepcopy(_rec("F1-D4", "0"))
+    h = next(h for h in r["state"]["handoffs"] if h["to"] == "executor")
+    h["content"] = "order #W1 [call #1]"
+    assert M.tagged_handoff(r) is True
+    h["content"] = "order #W1"
+    assert M.tagged_handoff(r) is False

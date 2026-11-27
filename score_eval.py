@@ -61,8 +61,11 @@ def main() -> None:
                        correct_writes_blocked=sum(ob), lost_correct_write=pct(sum(lost), len(lost)))
         looks = [M.provenance_lookups(r) for r in runs if M.provenance_lookups(r) is not None]
         if looks:  # D4/D5: was the lookup tool used at all?
+            tagged = [M.tagged_handoff(r) for r in runs if M.tagged_handoff(r) is not None]
             row.update(lookup_runs=pct(sum(n > 0 for n in looks), len(looks)),
-                       mean_lookups=round(sum(looks) / len(looks), 2))
+                       mean_lookups=round(sum(looks) / len(looks), 2),
+                       mean_requeries=round(sum(r.get("usage", {}).get("requeries", 0) for r in runs) / len(runs), 2),
+                       tagged_handoffs=pct(sum(tagged), len(tagged)))
         if CONDITIONS.get(c) and CONDITIONS[c].fault:
             po = [M.passed_on(r) for r in runs if M.passed_on(r) is not None]
             ww = [M.wrong_value_write(r) for r in runs if M.wrong_value_write(r) is not None]
@@ -88,10 +91,11 @@ def main() -> None:
     cols = ["condition", "runs", "errors", "solved", "success", "ci_low", "ci_high", "mean_seconds",
             "mean_tokens", "mean_llm_calls", "mean_tool_calls", "truncated_calls", "verifier_blocks",
             "correct_writes_blocked", "lost_correct_write", "lookup_runs",
-            "mean_lookups", "no_target",
+            "mean_lookups", "mean_requeries", "tagged_handoffs", "no_target",
             "fault_fired", "passed_on", "wrong_value_write", "fault_induced_failure", "detected",
             "detected_without_requery", *M.SIGNALS, "verifier_blocked_planted"]
-    fault_cols = ["verifier_blocks", "correct_writes_blocked", "lost_correct_write", "lookup_runs", "fault_fired", "passed_on", "wrong_value_write", "fault_induced_failure", "detected"]
+    fault_cols = ["verifier_blocks", "correct_writes_blocked", "lost_correct_write", "lookup_runs",
+                  "tagged_handoffs", "fault_fired", "passed_on", "wrong_value_write", "fault_induced_failure", "detected"]
     print(f"{'condition':<14} {'runs':>4} {'err':>3} {'solved':>7} {'95% CI':>13} {'sec':>6} "
           f"{'tokens':>8} {'tools':>5}  fault metrics")
     for r in rows:
