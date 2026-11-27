@@ -17,7 +17,8 @@ def test_conditions_differ_only_in_the_manipulated_settings():
     for spec in CONDITIONS.values():
         cfg = spec.run_config("qwen3:8b")
         changed = {k for k in vars(base) if getattr(base, k) != getattr(cfg, k)}
-        assert changed <= {"verifier", "provenance", "provenance_requery"}, (spec.name, changed)
+        assert changed <= {"verifier", "verifier_matched", "executor_full_information",
+                           "provenance", "provenance_requery"}, (spec.name, changed)
 
 
 def test_wilson_interval():

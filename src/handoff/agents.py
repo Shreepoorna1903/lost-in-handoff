@@ -61,6 +61,8 @@ class RunConfig:
     # instead of returning its logged output (D4). Off by default; has no effect without provenance.
     provenance_requery: bool = False
     verifier: bool = False
+    verifier_matched: bool = False
+    executor_full_information: bool = False
 
     handoff_max_tokens: int = 4096  # cap on structured-handoff extraction (guards runaway JSON)
     request_timeout: float = 600.0  # seconds of silence before an Ollama call raises
@@ -145,16 +147,32 @@ rule stated in it, and (2) the tool results gathered so far (IDs, prices, status
 Reply with exactly one line: either `APPROVE` or `REJECT: <short reason>`."""
 
 
+MATCHED_VERIFIER_PROMPT = """You are a verifier that gates write actions in a retail customer-service system.
+Approve the proposed action only if it is consistent with the request, constraints, and facts in the handoff.
+Reply with exactly one line: either `APPROVE` or `REJECT: <short reason>`."""
+
+
+def logged_read_evidence(env: ToolEnv) -> str:
+    return "\n".join(f"[call #{r.step}] {r.tool}({json.dumps(r.args)}) -> {r.output[:1500]}"
+                     for r in env.log if not r.is_write)
+
+
 def verify(cfg: RunConfig, usage: Usage, original_request: str, env: ToolEnv,
-           tool: str, args: dict) -> str | None:
+           tool: str, args: dict, *, handoff: str = "") -> str | None:
     """Return None if approved, else a rejection reason."""
-    evidence = "\n".join(f"[call #{r.step}] {r.tool}({json.dumps(r.args)}) -> {r.output[:1500]}"
-                         for r in env.log if not r.is_write)
-    msg = cfg.llm().invoke([
-        SystemMessage(VERIFIER_PROMPT),
-        HumanMessage(f"ORIGINAL TICKET:\n{original_request}\n\nTOOL RESULTS SO FAR:\n{evidence}\n\n"
-                     f"PROPOSED ACTION: {tool}({json.dumps(args)})"),
-    ])
+    if cfg.verifier_matched:
+        msg = cfg.llm().invoke([
+            SystemMessage(MATCHED_VERIFIER_PROMPT),
+            HumanMessage(f"{handoff}\n\nPROPOSED ACTION: {tool}({json.dumps(args)})"),
+        ])
+    else:
+        evidence = "\n".join(f"[call #{r.step}] {r.tool}({json.dumps(r.args)}) -> {r.output[:1500]}"
+                             for r in env.log if not r.is_write)
+        msg = cfg.llm().invoke([
+            SystemMessage(VERIFIER_PROMPT),
+            HumanMessage(f"ORIGINAL TICKET:\n{original_request}\n\nTOOL RESULTS SO FAR:\n{evidence}\n\n"
+                         f"PROPOSED ACTION: {tool}({json.dumps(args)})"),
+        ])
     usage.add(msg)
     usage.verifier_calls += 1
     text = (msg.content or "").strip()
@@ -198,7 +216,7 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
             final = ai.content or ""
             break
         for tc in ai.tool_calls:
-            msgs.append(ToolMessage(_execute(name, tc, tools, env, cfg, usage, original_request),
+            msgs.append(ToolMessage(_execute(name, tc, tools, env, cfg, usage, original_request, handoff=user),
                                     tool_call_id=tc["id"]))
     else:
         final = TURN_LIMIT_TEXT
@@ -214,7 +232,7 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
 
 
 def _execute(agent: str, tc: dict, tools: list[str], env: ToolEnv, cfg: RunConfig,
-             usage: Usage, original_request: str) -> str:
+             usage: Usage, original_request: str, *, handoff: str = "") -> str:
     tool, args = tc["name"], tc["args"] or {}
     if tool == PROVENANCE_TOOL and cfg.provenance:
         usage.lookups += 1
@@ -227,7 +245,7 @@ def _execute(agent: str, tc: dict, tools: list[str], env: ToolEnv, cfg: RunConfi
     if usage.tool_calls >= cfg.tool_call_budget:
         return "Error: tool-call budget for this ticket is exhausted. Finish now."
     if cfg.verifier and env.is_write(tool):
-        reason = verify(cfg, usage, original_request, env, tool, args)
+        reason = verify(cfg, usage, original_request, env, tool, args, handoff=handoff)
         if reason is not None:
             return f"Blocked by verifier: {reason}. Fix the action or explain why it cannot be done."
     usage.tool_calls += 1

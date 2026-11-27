@@ -16,7 +16,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 
 from handoff import handoffs as H
-from handoff.agents import RunConfig, Usage, run_agent
+from handoff.agents import RunConfig, Usage, logged_read_evidence, run_agent
 from handoff.env import (
     ALL_TOOLS, APPROVAL_TOOL, GENERIC_TOOLS, READ_TOOLS, READ_TOOLS_ACCOUNT,
     READ_TOOLS_CATALOG, WRITE_TOOLS, ToolEnv,
@@ -179,8 +179,12 @@ def _agent_node(role: str, tools: list[str], idx: int, n: int, fmt: str | None):
         env: ToolEnv = rt["env"]
         cfg: RunConfig = rt["cfg"]
         last = idx == n - 1
+        incoming = _incoming(state, rt, idx == 0)
+        if role == "executor" and cfg.executor_full_information:
+            incoming += (f"\n\nORIGINAL TICKET:\n{rt['request']}"
+                         f"\n\nTOOL RESULTS SO FAR:\n{logged_read_evidence(env)}")
         res = run_agent(name=role, system=_system(role, env.policy(), fmt, cfg, last, bool(tools)),
-                        user=_incoming(state, rt, idx == 0), tools=tools, env=env, cfg=cfg,
+                        user=incoming, tools=tools, env=env, cfg=cfg,
                         usage=rt["usage"], original_request=rt["request"], wrap_up=not last)
         out: TeamState = {
             "transcripts": state.get("transcripts", []) + [{"agent": role, "messages": res.messages}],

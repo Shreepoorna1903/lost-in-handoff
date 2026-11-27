@@ -125,8 +125,8 @@ def test_no_target_records_are_not_retried(tmp_path):
 
 def test_fault_conditions_are_built_where_the_defense_is():
     for f in ("F1", "F2", "F3", "F4"):
-        assert CONDITIONS[f"{f}-D0"].built and CONDITIONS[f"{f}-D2"].built and CONDITIONS[f"{f}-D4"].built
-        assert not CONDITIONS[f"{f}-D1"].built  # D1, D3, D5 wait on their owners
+        for defense in ("D0", "D1", "D2", "D3", "D4"):
+            assert CONDITIONS[f"{f}-{defense}"].built
 
 
 def test_f4_fork_runs_on_the_real_graph(monkeypatch):

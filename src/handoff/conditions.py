@@ -35,10 +35,9 @@ FAULTS = {
 # Defenses (RQ2: verifier and information access; RQ3: provenance). Each maps to RunConfig fields.
 DEFENSES = {
     "D0": {"label": "no defense", "config": {}, "built": True},
-    "D1": {"label": "verifier, matched information", "config": {}, "built": False, "owner": "Harsha"},
+    "D1": {"label": "verifier, matched information", "config": {"verifier": True, "verifier_matched": True}, "built": True},
     "D2": {"label": "verifier, full information", "config": {"verifier": True}, "built": True},
-    "D3": {"label": "executor with full information, no verifier", "config": {}, "built": False,
-           "owner": "Harsha"},
+    "D3": {"label": "executor with full information, no verifier", "config": {"executor_full_information": True}, "built": True},
     "D4": {"label": "provenance tags, trace", "config": {"provenance": True}, "built": True},
     "D5": {"label": "provenance tags, re-query", "config": {"provenance": True, "provenance_requery": True},
            "built": True},
