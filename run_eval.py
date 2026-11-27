@@ -8,6 +8,12 @@ Records go to runs/<model>/<condition>/task<ID>__trial<K>.json. Running the same
 finished trials are skipped. A run that crashes is saved as an error record, not dropped, and is
 retried on the next run of the command.
 Conditions are defined in src/handoff/conditions.py.
+
+Faults (targets from data/fault_targets.json, see scripts/pick_fault_targets.py):
+  F1-F3  planted in a tool output by ToolEnv, on the first read of the target order.
+  F4     a clean run of the same condition, then a fork after the researcher's handoff with the value
+         misreported (runner.fork_with_false_claim). If the researcher never wrote the value, there is
+         nothing to rewrite: the record is saved with status "no_target" and is not retried.
 """
 
 from __future__ import annotations
@@ -19,9 +25,14 @@ import time
 import traceback
 from pathlib import Path
 
-from handoff.conditions import CONDITIONS, fault_targets
-from handoff.runner import run_ticket
-from handoff.tasks import load_tickets
+from handoff.conditions import CONDITIONS, Spec, fault_targets
+from handoff.agents import RunConfig
+from handoff.faults import build_faults
+from handoff.runner import fork_with_false_claim, run_ticket
+from handoff.tasks import Ticket, load_tickets
+from handoff.topologies import RUNTIME
+
+DONE = ("ok", "no_target")  # statuses that count as finished; error records are retried
 
 
 def results_folder(root: str, model: str, condition: str) -> Path:
@@ -42,9 +53,38 @@ def write(record: dict, folder: Path) -> Path:
 def saved_ok(fp: Path) -> bool:
     """True if this trial already has a finished record. Error records are retried (and overwritten)."""
     try:
-        return json.loads(fp.read_text()).get("status") == "ok"
+        return json.loads(fp.read_text()).get("status") in DONE
     except (OSError, json.JSONDecodeError):
         return False
+
+
+def run_false_claim(tk: Ticket, spec: Spec, cfg: RunConfig, target: dict) -> dict:
+    """F4: a clean run, then a fork at the target handoff with true_value replaced by false_value."""
+    clean = run_ticket(tk, spec.condition(), cfg, keep_graph=True)
+    run_key = clean["_config"]["configurable"]["run_key"]
+    try:
+        hop, true = target["hop"], target["true_value"]
+        hs = clean["state"].get("handoffs", [])
+        reason = (f"run has {len(hs)} handoffs, none at hop {hop}" if hop >= len(hs) else
+                  None if true in hs[hop]["content"] else
+                  f"{true!r} is not in the {hs[hop]['from']} -> {hs[hop]['to']} handoff")
+        if reason:  # nothing to misreport; the clean run is kept for reference
+            rec = {k: v for k, v in clean.items() if not k.startswith("_")}
+            return {**rec, "status": "no_target", "no_target_reason": reason}
+        r = fork_with_false_claim(clean, tk, spec.condition(), cfg, hop, true, target["false_value"])
+        # `seconds` covers the replay after the fork; the clean prefix ran before it
+        r.update(status="ok", clean_run_seconds=clean["seconds"], clean_run_success=clean["success"])
+        return r
+    finally:
+        RUNTIME.pop(run_key, None)
+
+
+def run_one(tk: Ticket, spec: Spec, cfg: RunConfig) -> dict:
+    """One trial of one condition: clean, a tool-level fault (F1-F3) or a false claim (F4)."""
+    if spec.fault == "F4":
+        return run_false_claim(tk, spec, cfg, fault_targets(tk.task_id, "F4"))
+    faults = build_faults(tk.task_id, spec.fault, fault_targets(tk.task_id, spec.fault)) if spec.fault else []
+    return {**run_ticket(tk, spec.condition(), cfg, faults=faults), "status": "ok"}
 
 
 def main() -> None:
@@ -83,10 +123,8 @@ def main() -> None:
                     "trial": trial, "trial_id": f"{a.condition}:{tk.task_id}:{trial}",
                     "started": time.strftime("%Y-%m-%dT%H:%M:%S")}
             try:
-                if spec.fault:
-                    fault_targets(tk.task_id, spec.fault)  # TODO (S+M): build faults from targets, fork for F4
-                r = run_ticket(tk, spec.condition(), spec.run_config(a.model, seed=trial))
-                r.update(meta, status="ok")
+                r = run_one(tk, spec, spec.run_config(a.model, seed=trial))
+                r.update(meta)
             except Exception as e:  # recorded as an outcome, never silently dropped
                 r = {"task_id": tk.task_id, "model": a.model, **meta, "status": "error", "success": False,
                      "error": f"{type(e).__name__}: {e}", "traceback": traceback.format_exc()[-3000:]}

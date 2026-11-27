@@ -57,7 +57,11 @@ def _score(ticket: Ticket, cond: Condition, cfg: RunConfig, env: ToolEnv, state:
         "sampling": {"think": cfg.sampling_think, "no_think": cfg.sampling_no_think, "seed": cfg.seed},
         "provenance": cfg.provenance,
         "verifier": cfg.verifier,
-        "faults": [{"id": f.fault_id, "kind": f.kind, "tool": f.tool, "occurrence": f.occurrence}
+        # fired: the fault changed a tool output (or, for a false claim, the handoff was rewritten).
+        # A run whose fault never fired did not test the fault; score_eval reports these separately.
+        "faults": [{"id": f.fault_id, "kind": f.kind, "tool": f.tool, "occurrence": f.occurrence,
+                    "args": f.args,
+                    "fired": f.kind == "false_claim" or any(r.injected == f.fault_id for r in env.log)}
                    for f in faults],
         "success": env.db_hash() == gold_hash,
         "diff_vs_gold": E.collateral_damage(final_db, gold_db),

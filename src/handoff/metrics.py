@@ -5,6 +5,7 @@ Implemented:
   success               final DB equals the gold replay. Recomputed here by replaying the run's logged
                         writes (ToolEnv.restore), not read from the saved flag.
   success_ci            Wilson 95% interval for a success rate
+  fault_fired           the planted fault changed a tool output or handoff  (from record["faults"])
   passed_on             the planted value appears in a later handoff        (from record["taint"])
   wrong_value_write     the planted value appears in a write call's args    (from record["taint"])
   fault_induced_failure a task the clean baseline solved fails under the fault (paired by task)
@@ -74,6 +75,13 @@ def success_ci(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     centre = (p + z * z / (2 * n)) / (1 + z * z / n)
     half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
     return (max(0.0, centre - half), min(1.0, centre + half))
+
+
+def fault_fired(r: dict) -> bool | None:
+    """Did the planted fault change a tool output (F1-F3) or the handoff (F4)? None for clean runs.
+    A fault on the target order's lookup does not fire if the agents never look that order up."""
+    fs = r.get("faults") or []
+    return None if not fs else all(f.get("fired", True) for f in fs)
 
 
 def passed_on(r: dict) -> bool | None:

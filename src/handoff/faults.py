@@ -28,31 +28,57 @@ def _set_path(obj: Any, path: list[str | int], value: Any) -> Any:
     return old
 
 
-def _json_path_mutator(path: list[str | int], value: Any):
+JsonPath = list  # one JSON path, e.g. ["items", 0, "item_id"]
+
+
+def _as_paths(paths: JsonPath | list[JsonPath]) -> list[JsonPath]:
+    """Accept one path or a list of paths (data/fault_targets.json uses lists)."""
+    return paths if paths and isinstance(paths[0], list) else [paths]
+
+
+def _json_path_mutator(paths: list[JsonPath], value: Any):
     def mutate(out: str) -> str:
         data = json.loads(out)
-        _set_path(data, path, value)
+        for p in paths:
+            _set_path(data, p, value)
         return json.dumps(data)
 
     return mutate
 
 
-def corrupted_output(fault_id: str, tool: str, path: list[str | int], wrong_value: Any,
-                     occurrence: int = 1) -> ToolFault:
+def corrupted_output(fault_id: str, tool: str, paths: JsonPath | list[JsonPath], wrong_value: Any,
+                     occurrence: int = 1, args: dict | None = None) -> ToolFault:
     return ToolFault(fault_id, "corrupted_output", tool, occurrence,
-                     _json_path_mutator(path, wrong_value), [str(wrong_value)])
+                     _json_path_mutator(_as_paths(paths), wrong_value), [str(wrong_value)], dict(args or {}))
 
 
-def wrong_identifier(fault_id: str, tool: str, path: list[str | int], other_valid_id: str,
-                     occurrence: int = 1) -> ToolFault:
+def wrong_identifier(fault_id: str, tool: str, paths: JsonPath | list[JsonPath], other_valid_id: str,
+                     occurrence: int = 1, args: dict | None = None) -> ToolFault:
     return ToolFault(fault_id, "wrong_identifier", tool, occurrence,
-                     _json_path_mutator(path, other_valid_id), [other_valid_id])
+                     _json_path_mutator(_as_paths(paths), other_valid_id), [other_valid_id], dict(args or {}))
 
 
-def irrelevant(fault_id: str, tool: str, path: list[str | int], value: Any,
-               occurrence: int = 1) -> ToolFault:
+def irrelevant(fault_id: str, tool: str, paths: JsonPath | list[JsonPath], value: Any,
+               occurrence: int = 1, args: dict | None = None) -> ToolFault:
     return ToolFault(fault_id, "irrelevant", tool, occurrence,
-                     _json_path_mutator(path, value), [str(value)])
+                     _json_path_mutator(_as_paths(paths), value), [str(value)], dict(args or {}))
+
+
+TOOL_FAULTS = {"F1": corrupted_output, "F2": wrong_identifier, "F3": irrelevant}
+
+
+def build_faults(task_id: str, fault: str, target: dict) -> list[ToolFault]:
+    """The tool-level fault for one entry of data/fault_targets.json (F1-F3).
+
+    The fault fires on the first successful call to the target tool with the target call's
+    arguments (e.g. get_order_details for that order), not on the n-th call to the tool: agents
+    look things up in a different order and number of times than the gold sequence. Once only, so
+    a re-query of the same order returns the true output (what D5 relies on).
+    """
+    if fault not in TOOL_FAULTS:
+        raise ValueError(f"{fault} is not a tool-level fault (F4 is planted by forking a run)")
+    return [TOOL_FAULTS[fault](f"{fault}_task{task_id}", target["tool"], target["paths"],
+                               target["wrong_value"], occurrence=1, args=target.get("args"))]
 
 
 def false_claim_text(handoff: str, true_value: str, false_value: str) -> str:

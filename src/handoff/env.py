@@ -80,17 +80,22 @@ class ToolCallRecord:
 class ToolFault:
     """A fault applied to a tool output.
 
-    `match(record_so_far)` decides whether this call is the target; `mutate`
-    rewrites the output string. `fault_id` must be a unique marker so the
-    injected value can be taint-tracked downstream.
+    The target call is the `occurrence`-th successful call to `tool` whose arguments include every
+    key/value in `args` (all calls to `tool` when `args` is empty). `mutate` rewrites the output
+    string. `fault_id` must be a unique marker so the injected value can be taint-tracked downstream.
+    A fault fires at most once: a later call with the same arguments returns the true output.
     """
 
     fault_id: str
     kind: str  # corrupted_output | wrong_identifier | irrelevant
     tool: str
-    occurrence: int  # 1 = first call to `tool`, 2 = second, ...
+    occurrence: int  # 1 = first matching call, 2 = second, ...
     mutate: Callable[[str], str]
     injected_values: list[str] = field(default_factory=list)
+    args: dict[str, Any] = field(default_factory=dict)  # e.g. {"order_id": "#W2378156"}
+
+    def matches(self, tool: str, args: dict[str, Any]) -> bool:
+        return tool == self.tool and all(args.get(k) == v for k, v in self.args.items())
 
 
 def _coerce_to_schema(value: Any, schema: dict) -> tuple[Any, bool]:
@@ -159,9 +164,11 @@ class ToolEnv:
         return rec.output
 
     def _maybe_inject(self, rec: ToolCallRecord) -> None:
-        n = sum(1 for r in self.log if r.tool == rec.tool and not r.error) + 1
         for f in self.faults:
-            if f.tool == rec.tool and f.occurrence == n:
+            if not f.matches(rec.tool, rec.args):
+                continue
+            n = sum(1 for r in self.log if not r.error and f.matches(r.tool, r.args)) + 1
+            if f.occurrence == n:
                 rec.output = f.mutate(rec.output)
                 rec.injected = f.fault_id
 
