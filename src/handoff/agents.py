@@ -20,23 +20,13 @@ PROVENANCE_SCHEMA = {
     "type": "function",
     "function": {
         "name": PROVENANCE_TOOL,
-        "description": "Return the original output of an earlier tool call by its number "
-        "(the N in [call #N]), to check a claim against its source.",
+        # Same description in D4 and D5, so they differ only in what the tool returns: D4 the logged
+        # output of call #N, D5 a fresh re-run of it on the current database.
+        "description": "Look up the source of a fact by its call number (the N in [call #N]) and "
+        "return that tool call's output, to check a claim against its source.",
         "parameters": {"type": "object",
                        "properties": {"call_id": {"type": "integer"}},
                        "required": ["call_id"]},
-    },
-}
-# D5: same tool name and [call #N] tags as D4, but the call is re-run on the current database
-# instead of returning the logged output. Only read calls can be re-run.
-PROVENANCE_REQUERY_SCHEMA = {
-    "type": "function",
-    "function": {
-        "name": PROVENANCE_TOOL,
-        "description": "Re-run an earlier read-only tool call by its number (the N in [call #N]) "
-        "against the current store database and return the fresh output, to check a claim "
-        "against its source.",
-        "parameters": PROVENANCE_SCHEMA["function"]["parameters"],
     },
 }
 REQUERYABLE_TOOLS = READ_TOOLS + GENERIC_TOOLS
@@ -101,6 +91,7 @@ class Usage:
     wrap_ups: int = 0  # extra tool-free calls to write a handoff after a turn-limited or empty ending
     truncated: int = 0  # calls that hit max_tokens_per_call
     requeries: int = 0  # D5 re-runs of a logged read call (also counted in tool_calls)
+    lookups: int = 0  # every get_tool_call_record call, D4 and D5, including failed ones
 
     def add(self, msg: AIMessage) -> None:
         self.llm_calls += 1
@@ -180,7 +171,7 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
     one extra tool-free call to write it."""
     schemas = env.schemas(tools)
     if cfg.provenance and tools:  # an agent with no tools has no tool calls to look up
-        schemas = schemas + [PROVENANCE_REQUERY_SCHEMA if cfg.provenance_requery else PROVENANCE_SCHEMA]
+        schemas = schemas + [PROVENANCE_SCHEMA]
     # decided by the role's environment tools, so adding the provenance tool never flips it
     llm = cfg.llm(think=cfg.think if tools else cfg.no_tool_think)
     if schemas:
@@ -225,12 +216,14 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
 def _execute(agent: str, tc: dict, tools: list[str], env: ToolEnv, cfg: RunConfig,
              usage: Usage, original_request: str) -> str:
     tool, args = tc["name"], tc["args"] or {}
+    if tool == PROVENANCE_TOOL and cfg.provenance:
+        usage.lookups += 1
     if tool == PROVENANCE_TOOL and cfg.provenance and cfg.provenance_requery:
         return _requery(agent, args.get("call_id"), env, cfg, usage)
     if tool == PROVENANCE_TOOL and cfg.provenance:
-        i = args.get("call_id")
-        rec = next((r for r in env.log if r.step == i), None)
-        return rec.output if rec else f"Error: no tool call #{i}"
+        i = _call_id(args.get("call_id"))  # models send "4" as often as 4
+        rec = next((r for r in env.log if r.step == i), None) if i is not None else None
+        return rec.output if rec else f"Error: no tool call #{args.get('call_id')}"
     if usage.tool_calls >= cfg.tool_call_budget:
         return "Error: tool-call budget for this ticket is exhausted. Finish now."
     if cfg.verifier and env.is_write(tool):
@@ -240,6 +233,13 @@ def _execute(agent: str, tc: dict, tools: list[str], env: ToolEnv, cfg: RunConfi
     usage.tool_calls += 1
     out = env.call(agent, tool, args, tools)
     return f"[call #{env.log[-1].step}] {out}" if cfg.provenance else out
+
+
+def _call_id(value) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _requery(agent: str, call_id, env: ToolEnv, cfg: RunConfig, usage: Usage) -> str:
@@ -252,9 +252,8 @@ def _requery(agent: str, call_id, env: ToolEnv, cfg: RunConfig, usage: Usage) ->
     Failed calls are never re-run: an access-denied call is logged too, and re-running it would hand
     the agent output its role cannot read. Writes are never re-run; the check is by tool name, since a
     denied write attempt is logged with is_write False."""
-    try:
-        i = int(call_id)
-    except (TypeError, ValueError):
+    i = _call_id(call_id)
+    if i is None:
         return f"Error: no tool call #{call_id}"
     rec = next((r for r in env.log if r.step == i), None)
     if rec is None:

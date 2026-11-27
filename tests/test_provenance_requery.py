@@ -7,8 +7,7 @@ import json
 
 import pytest
 
-from handoff.agents import (PROVENANCE_REQUERY_SCHEMA, PROVENANCE_SCHEMA, PROVENANCE_TOOL, RunConfig,
-                            Usage, _execute)
+from handoff.agents import PROVENANCE_SCHEMA, PROVENANCE_TOOL, RunConfig, Usage, _execute
 from handoff.conditions import CONDITIONS, fault_targets
 from handoff.env import READ_TOOLS, WRITE_TOOLS, ToolEnv
 from handoff.faults import build_faults
@@ -121,7 +120,8 @@ def test_d5_researcher_gets_the_requery_tool(monkeypatch):
     assert r5["tools"][:-1] == r0["tools"] and r5["tools"][-1] == PROVENANCE_TOOL
 
 
-def test_d4_and_d5_bind_their_own_description(monkeypatch):
+def test_d4_and_d5_bind_the_same_tool_description(monkeypatch):
+    """D4 and D5 differ only in what the tool returns, not in what the agent is told it does."""
     from langchain_core.messages import AIMessage
 
     from handoff import agents as A
@@ -139,4 +139,55 @@ def test_d4_and_d5_bind_their_own_description(monkeypatch):
     for cfg in (RunConfig(provenance=True), RunConfig(provenance=True, provenance_requery=True)):
         A.run_agent(name="executor", system="s", user="u", tools=EXECUTOR_TOOLS, env=ToolEnv(),
                     cfg=cfg, usage=Usage())
-    assert bound == [PROVENANCE_SCHEMA, PROVENANCE_REQUERY_SCHEMA]
+    assert bound == [PROVENANCE_SCHEMA, PROVENANCE_SCHEMA]
+
+
+# ---------------------------------------------------------------- D4/D5 wiring (executor, tagging, lookups)
+from handoff.handoffs import EXECUTOR_PROVENANCE_INSTRUCTION  # noqa: E402
+
+
+@pytest.mark.parametrize("cond", ["clean-D4", "clean-D5"])
+def test_executor_is_told_to_check_its_sources(monkeypatch, cond):
+    ex = _role(_prompts(monkeypatch, cond), "you are the executor")
+    assert EXECUTOR_PROVENANCE_INSTRUCTION in ex["system"] and PROVENANCE_TOOL in ex["tools"]
+
+
+@pytest.mark.parametrize("cond", ["clean-D0", "clean-D2"])
+def test_executor_without_provenance_is_unchanged(monkeypatch, cond):
+    ex = _role(_prompts(monkeypatch, cond), "you are the executor")
+    assert EXECUTOR_PROVENANCE_INSTRUCTION not in ex["system"] and PROVENANCE_TOOL not in ex["tools"]
+    assert "[call #" not in ex["system"]
+
+
+def test_d4_and_d5_prompts_are_identical(monkeypatch):
+    d4, d5 = _prompts(monkeypatch, "clean-D4"), _prompts(monkeypatch, "clean-D5")
+    assert d4 == d5  # every agent: same system prompt, same tools
+
+
+def test_researcher_must_tag_every_id_and_value(monkeypatch):
+    r = _role(_prompts(monkeypatch, "clean-D4"), "research specialist")
+    assert "Never pass on an ID or a value without its tag." in r["system"]
+    assert EXECUTOR_PROVENANCE_INSTRUCTION not in r["system"]  # the researcher is not the last agent
+
+
+def test_d4_lookup_accepts_a_string_call_id():
+    env, t = _f1_env()
+    out = _lookup(RunConfig(provenance=True), env, Usage(), "0")
+    assert json.loads(out)["status"] == t["wrong_value"]  # trace: the logged (planted) output
+
+
+@pytest.mark.parametrize("requery", [False, True])
+def test_every_lookup_is_counted(requery):
+    env, _ = _f1_env()
+    cfg, usage = RunConfig(provenance=True, provenance_requery=requery), Usage()
+    _lookup(cfg, env, usage, 0)
+    _lookup(cfg, env, usage, 99)  # a failed lookup still counts as a use of the tool
+    assert usage.lookups == 2
+    assert usage.requeries == (1 if requery else 0)
+
+
+def test_no_lookups_counted_without_provenance():
+    env, _ = _f1_env()
+    usage = Usage()
+    _lookup(RunConfig(), env, usage, 0)
+    assert usage.lookups == 0

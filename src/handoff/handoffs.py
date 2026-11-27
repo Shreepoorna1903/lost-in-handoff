@@ -74,9 +74,21 @@ FULL_CONTEXT_INSTRUCTION = (
     "When you are done, reply with a short note for the next agent. "
     "The next agent will receive the complete history of the work so far."
 )
+# D4/D5, tool-using agents that write a handoff (the researcher). The pilot's weaker wording ("Tag every
+# fact you pass on") gave tags in only 11 of 49 D4 handoffs.
 PROVENANCE_INSTRUCTION = (
-    " Tool results are labeled [call #N]. Tag every fact you pass on with its source, "
-    "e.g. 'item 123 costs $50 [call #4]'."
+    " Tool results are labeled [call #N]. Tag every ID and every value you pass on with the call it "
+    "came from, e.g. 'item 123 costs $50 [call #4]'. Never pass on an ID or a value without its tag."
+)
+# D4/D5, the last agent (the executor), which writes no handoff and so never got PROVENANCE_INSTRUCTION:
+# in the pilot it called get_tool_call_record in 1 of 49 D4 runs. Same wording in D4 and D5, so the
+# conditions differ only in what the tool returns (the logged output vs a fresh re-run).
+EXECUTOR_PROVENANCE_INSTRUCTION = (
+    "Facts in the handoff are tagged with the tool call they came from, e.g. [call #4]. Before each "
+    "write, check every ID and value you are about to use against its source: call "
+    "get_tool_call_record with that call number and compare. If the source shows a different ID or "
+    "value, use what the source shows. If a value has no tag, or its source does not support it, do "
+    "not write it; report the problem instead."
 )
 
 

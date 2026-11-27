@@ -124,6 +124,9 @@ def _system(role: str, policy: str, fmt: str | None, cfg: RunConfig, last: bool,
         # intake) has nothing to tag: in the pilot, told to tag every fact, it dropped the customer's
         # email and zip on tasks 3 and 4 in every D4 run. So it gets the plain instruction.
         s += "\n\n" + H.instruction(fmt, cfg.provenance and has_tools)
+    if cfg.provenance and has_tools and last:
+        # D4/D5: the last agent writes no handoff, so it never hears about [call #N] above
+        s += "\n\n" + H.EXECUTOR_PROVENANCE_INSTRUCTION
     return s
 
 
