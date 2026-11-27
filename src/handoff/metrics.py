@@ -31,11 +31,12 @@ Implemented:
                         transfer_to_human_agents. Attempts are read from transcripts, so writes the
                         verifier blocked still count. An executor that tries the false ID, is rejected
                         by the database and then escalates is not counted: the environment caught it.
+  detected_without_requery  detected minus the requeried signal, reported next to detected
   verifier_blocked_planted  upper bound to verifier_named: a block of a write carrying the planted value,
                         whatever the reason. Reported next to detected, not part of it.
   Hand-check (20 pilot runs, labelled by an independent reviewer from the raw records): every field
   above matched the code exactly. Against a common-sense reading of "an agent noticed the planted fact",
-  detected agreed on 9 of 18 fault runs: re-queries are often habitual (compare with the F3 control's
+  detected agreed on 9 of 18 fault runs, in a sample chosen toward borderline cases (not a typical rate): re-queries are often habitual (compare with the F3 control's
   rate), verifiers sometimes object by description rather than by value, and agents that notice only
   after a database error or after the wrong write are excluded by design.
 
@@ -241,6 +242,14 @@ def detected(r: dict) -> bool | None:
     """An agent noticed the planted fact: any detection signal. None when the run did not test a fault."""
     s = detection_signals(r)
     return None if s is None else any(v is True for v in s.values())
+
+
+def detected_without_requery(r: dict) -> bool | None:
+    """detected without the requeried signal. Reported next to detected: in the hand-check most re-queries
+    were habitual (the model repeats lookups in clean and F3 runs too), so this shows how much of
+    detected rests on re-queries alone, without changing the FP2 definition."""
+    s = detection_signals(r)
+    return None if s is None else any(s[k] is True for k in SIGNALS if k != "requeried")
 
 
 def _tool_results(r: dict):

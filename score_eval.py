@@ -74,6 +74,8 @@ def main() -> None:
                        fault_induced_failure=pct(fi, elig))
             det = [M.detected(r) for r in runs if M.detected(r) is not None]
             row["detected"] = pct(sum(det), len(det))
+            dnr = [M.detected_without_requery(r) for r in runs if M.detected_without_requery(r) is not None]
+            row["detected_without_requery"] = pct(sum(dnr), len(dnr))
             vbp = [M.verifier_blocked_planted(r) for r in runs if M.verifier_blocked_planted(r) is not None]
             if vbp and any(M.over_blocking(r) is not None for r in runs):  # verifier conditions only
                 row["verifier_blocked_planted"] = pct(sum(vbp), len(vbp))
@@ -88,7 +90,7 @@ def main() -> None:
             "correct_writes_blocked", "lost_correct_write", "lookup_runs",
             "mean_lookups", "no_target",
             "fault_fired", "passed_on", "wrong_value_write", "fault_induced_failure", "detected",
-            *M.SIGNALS, "verifier_blocked_planted"]
+            "detected_without_requery", *M.SIGNALS, "verifier_blocked_planted"]
     fault_cols = ["verifier_blocks", "correct_writes_blocked", "lost_correct_write", "lookup_runs", "fault_fired", "passed_on", "wrong_value_write", "fault_induced_failure", "detected"]
     print(f"{'condition':<14} {'runs':>4} {'err':>3} {'solved':>7} {'95% CI':>13} {'sec':>6} "
           f"{'tokens':>8} {'tools':>5}  fault metrics")

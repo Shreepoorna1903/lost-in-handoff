@@ -149,3 +149,11 @@ def test_verifier_blocked_planted_is_the_upper_bound_to_named():
     assert M.verifier_blocked_planted(_rec("F4-D2", "13")) is True
     assert M.verifier_blocked_planted(_rec("F4-D0", "0")) is False  # no verifier, no block
     assert M.verifier_blocked_planted(_rec("F1-D2", "13")) is None  # word-valued fault
+
+
+def test_detected_without_requery_drops_only_the_requery_signal():
+    r = _rec("F2-D2", "3")  # detected only through a repeated lookup
+    assert M.detected(r) is True and M.detected_without_requery(r) is False
+    r = _rec("F4-D2", "13")  # detected through the verifier naming the false ID
+    assert M.detected(r) is True and M.detected_without_requery(r) is True
+    assert M.detected_without_requery(_rec("clean-D0", "0")) is None
