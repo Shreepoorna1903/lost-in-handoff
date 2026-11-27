@@ -8,7 +8,8 @@ Implemented:
   fault_fired           the planted fault changed a tool output or handoff  (from record["faults"])
   passed_on             the planted value appears in a later handoff        (from record["taint"])
   wrong_value_write     the planted value appears in a write call's args    (from record["taint"])
-  fault_induced_failure a task the clean baseline solved fails under the fault (paired by task)
+  fault_induced_failure a task the same defense's clean run solved fails under the fault (paired
+                        by task; runs where the fault never fired are left out)
   cost                  mean seconds, tokens, LLM calls, tool calls, truncated calls per run
 
 TODO (Puneet):
@@ -95,11 +96,15 @@ def wrong_value_write(r: dict) -> bool | None:
 
 
 def fault_induced_failures(fault_runs: list[dict], baseline_runs: list[dict]) -> tuple[int, int]:
-    """(failures, eligible): among tasks the baseline solved in every run, fault runs that failed."""
+    """(failures, eligible): among tasks the baseline solved in every run, fault runs that failed.
+
+    The baseline is the clean run of the same defense (F2-D4 against clean-D4), so a defense's own
+    cost is not counted as damage from the fault. A run whose fault never fired (the agents never
+    looked up the target order) did not test the fault and is not eligible."""
     solved = {}
     for r in baseline_runs:
         solved[r["task_id"]] = solved.get(r["task_id"], True) and r["_success"]
-    eligible = [r for r in fault_runs if solved.get(r["task_id"])]
+    eligible = [r for r in fault_runs if solved.get(r["task_id"]) and fault_fired(r) is not False]
     return sum(not r["_success"] for r in eligible), len(eligible)
 
 

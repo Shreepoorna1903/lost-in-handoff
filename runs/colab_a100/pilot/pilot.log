@@ -1,0 +1,177 @@
+=== pilot 2026-11-27 05:44:59 commit 2294d8b: 16 conditions to run, 15 not built
+=== single-clean 2026-11-27 05:44:59 commit 2294d8b
+task   0 trial 0 ok    success=True 244.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task0__trial0.json
+task   2 trial 0 ok    success=True 275.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task2__trial0.json
+task   1 trial 0 ok    success=False 291.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task1__trial0.json
+task   3 trial 0 ok    success=True 386.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task3__trial0.json
+task  13 trial 0 ok    success=False 152.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task13__trial0.json
+task  14 trial 0 ok    success=True 147.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task14__trial0.json
+task  11 trial 0 ok    success=True 292.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task11__trial0.json
+task   4 trial 0 ok    success=False 360.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task4__trial0.json
+task  16 trial 0 ok    success=True 106.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task16__trial0.json
+task  15 trial 0 ok    success=True 134.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/single-clean/task15__trial0.json
+=== clean-D0 2026-11-27 05:57:49 commit 2294d8b
+task   0 trial 0 ok    success=True 366.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task0__trial0.json
+task   1 trial 0 ok    success=False 381.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task1__trial0.json
+task   3 trial 0 ok    success=True 421.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task3__trial0.json
+task   2 trial 0 ok    success=False 421.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task2__trial0.json
+task  13 trial 0 ok    success=True 304.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task13__trial0.json
+task  11 trial 0 ok    success=False 358.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task11__trial0.json
+task  14 trial 0 ok    success=True 356.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task14__trial0.json
+task   4 trial 0 ok    success=True 418.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task4__trial0.json
+task  15 trial 0 ok    success=True 297.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task15__trial0.json
+task  16 trial 0 ok    success=True 358.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D0/task16__trial0.json
+=== clean-D2 2026-11-27 06:16:37 commit 2294d8b
+task   3 trial 0 ok    success=False 282.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task3__trial0.json
+task   1 trial 0 ok    success=False 337.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task1__trial0.json
+task   2 trial 0 ok    success=True 416.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task2__trial0.json
+task  14 trial 0 ok    success=False 358.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task14__trial0.json
+task  13 trial 0 ok    success=True 561.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task13__trial0.json
+task   0 trial 0 ok    success=False 997.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task0__trial0.json
+task  11 trial 0 ok    success=True 797.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task11__trial0.json
+task   4 trial 0 ok    success=True 416.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task4__trial0.json
+task  16 trial 0 ok    success=False 523.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task16__trial0.json
+task  15 trial 0 ok    success=False 278.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D2/task15__trial0.json
+=== clean-D4 2026-11-27 06:45:20 commit 2294d8b
+task   1 trial 0 ok    success=True 382.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task1__trial0.json
+task   0 trial 0 ok    success=True 401.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task0__trial0.json
+task   2 trial 0 ok    success=False 412.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task2__trial0.json
+task   4 trial 0 ok    success=False 61.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task4__trial0.json
+task   3 trial 0 ok    success=False 526.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task3__trial0.json
+task  11 trial 0 ok    success=False 298.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task11__trial0.json
+task  15 trial 0 ok    success=True 298.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task15__trial0.json
+task  14 trial 0 ok    success=False 293.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task14__trial0.json
+task  13 trial 0 ok    success=False 618.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task13__trial0.json
+task  16 trial 0 ok    success=True 364.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/clean-D4/task16__trial0.json
+=== F1-D0 2026-11-27 07:03:15 commit 2294d8b
+task   2 trial 0 ok    success=False 270.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task2__trial0.json
+task   3 trial 0 ok    success=False 306.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task3__trial0.json
+task   1 trial 0 ok    success=False 483.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task1__trial0.json
+task  14 trial 0 ok    success=False 292.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task14__trial0.json
+task   0 trial 0 ok    success=False 683.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task0__trial0.json
+task  11 trial 0 ok    success=False 230.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task11__trial0.json
+task  13 trial 0 ok    success=False 646.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task13__trial0.json
+task   4 trial 0 ok    success=False 380.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task4__trial0.json
+task  16 trial 0 ok    success=False 439.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task16__trial0.json
+task  15 trial 0 ok    success=False 206.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D0/task15__trial0.json
+=== F1-D2 2026-11-27 07:24:55 commit 2294d8b
+task   3 trial 0 ok    success=False 262.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task3__trial0.json
+task   2 trial 0 ok    success=False 308.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task2__trial0.json
+task   0 trial 0 ok    success=True 341.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task0__trial0.json
+task   1 trial 0 ok    success=False 638.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task1__trial0.json
+task  14 trial 0 ok    success=False 574.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task14__trial0.json
+task   4 trial 0 ok    success=False 592.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task4__trial0.json
+task  13 trial 0 ok    success=False 997.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task13__trial0.json
+task  11 trial 0 ok    success=False 794.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task11__trial0.json
+task  15 trial 0 ok    success=False 533.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task15__trial0.json
+task  16 trial 0 ok    success=False 135.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D2/task16__trial0.json
+=== F1-D4 2026-11-27 07:51:33 commit 2294d8b
+task   3 trial 0 ok    success=False 102.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task3__trial0.json
+task   2 trial 0 ok    success=False 292.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task2__trial0.json
+task   0 trial 0 ok    success=False 310.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task0__trial0.json
+task   1 trial 0 ok    success=False 408.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task1__trial0.json
+task  14 trial 0 ok    success=False 319.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task14__trial0.json
+task   4 trial 0 ok    success=False 206.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task4__trial0.json
+task  11 trial 0 ok    success=False 283.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task11__trial0.json
+task  15 trial 0 ok    success=False 302.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task15__trial0.json
+task  13 trial 0 ok    success=False 793.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task13__trial0.json
+task  16 trial 0 ok    success=True 458.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F1-D4/task16__trial0.json
+=== F2-D0 2026-11-27 08:11:13 commit 2294d8b
+task   1 trial 0 ok    success=False 307.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task1__trial0.json
+task   2 trial 0 ok    success=False 310.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task2__trial0.json
+task   0 trial 0 ok    success=False 402.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task0__trial0.json
+task   3 trial 0 ok    success=False 415.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task3__trial0.json
+task  11 trial 0 ok    success=False 315.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task11__trial0.json
+task  14 trial 0 ok    success=False 307.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task14__trial0.json
+task   4 trial 0 ok    success=False 473.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task4__trial0.json
+task  16 trial 0 ok    success=False 500.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task16__trial0.json
+task  13 trial 0 ok    success=False 1021.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task13__trial0.json
+task  15 trial 0 ok    success=False 474.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D0/task15__trial0.json
+=== F2-D2 2026-11-27 08:34:14 commit 2294d8b
+task   2 trial 0 ok    success=False 428.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task2__trial0.json
+task   0 trial 0 ok    success=False 589.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task0__trial0.json
+task   1 trial 0 ok    success=False 603.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task1__trial0.json
+task   3 trial 0 ok    success=False 710.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task3__trial0.json
+task  13 trial 0 ok    success=False 329.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task13__trial0.json
+task   4 trial 0 ok    success=False 370.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task4__trial0.json
+task  11 trial 0 ok    success=False 589.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task11__trial0.json
+task  14 trial 0 ok    success=False 524.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task14__trial0.json
+task  15 trial 0 ok    success=False 353.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task15__trial0.json
+task  16 trial 0 ok    success=False 458.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D2/task16__trial0.json
+=== F2-D4 2026-11-27 09:02:16 commit 2294d8b
+task   3 trial 0 ok    success=False 136.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task3__trial0.json
+task   2 trial 0 ok    success=False 368.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task2__trial0.json
+task  14 trial 0 ok    success=False 281.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task14__trial0.json
+task   0 trial 0 ok    success=False 489.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task0__trial0.json
+task   4 trial 0 ok    success=False 128.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task4__trial0.json
+task   1 trial 0 ok    success=False 1136.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task1__trial0.json
+task  15 trial 0 ok    success=False 684.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task15__trial0.json
+task  13 trial 0 ok    success=False 1042.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task13__trial0.json
+task  11 trial 0 ok    success=False 329.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task11__trial0.json
+task  16 trial 0 ok    success=False 329.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F2-D4/task16__trial0.json
+=== F3-D0 2026-11-27 09:32:42 commit 2294d8b
+task   3 trial 0 ok    success=True 350.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task3__trial0.json
+task   0 trial 0 ok    success=True 361.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task0__trial0.json
+task   2 trial 0 ok    success=False 404.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task2__trial0.json
+task   1 trial 0 ok    success=False 647.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task1__trial0.json
+task  14 trial 0 ok    success=True 320.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task14__trial0.json
+task   4 trial 0 ok    success=True 348.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task4__trial0.json
+task  13 trial 0 ok    success=False 349.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task13__trial0.json
+task  11 trial 0 ok    success=False 284.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task11__trial0.json
+task  15 trial 0 ok    success=True 231.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task15__trial0.json
+task  16 trial 0 ok    success=False 188.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D0/task16__trial0.json
+=== F3-D2 2026-11-27 09:51:53 commit 2294d8b
+task   1 trial 0 ok    success=True 358.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task1__trial0.json
+task   2 trial 0 ok    success=False 405.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task2__trial0.json
+task   3 trial 0 ok    success=True 494.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task3__trial0.json
+task   0 trial 0 ok    success=False 505.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task0__trial0.json
+task  13 trial 0 ok    success=True 545.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task13__trial0.json
+task   4 trial 0 ok    success=True 457.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task4__trial0.json
+task  11 trial 0 ok    success=True 618.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task11__trial0.json
+task  15 trial 0 ok    success=False 266.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task15__trial0.json
+task  14 trial 0 ok    success=False 746.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task14__trial0.json
+task  16 trial 0 ok    success=True 336.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D2/task16__trial0.json
+=== F3-D4 2026-11-27 10:14:16 commit 2294d8b
+task   3 trial 0 ok    success=False 183.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task3__trial0.json
+task   2 trial 0 ok    success=True 295.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task2__trial0.json
+task   0 trial 0 ok    success=True 388.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task0__trial0.json
+task   1 trial 0 ok    success=True 399.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task1__trial0.json
+task   4 trial 0 ok    success=False 143.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task4__trial0.json
+task  13 trial 0 ok    success=True 362.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task13__trial0.json
+task  11 trial 0 ok    success=True 403.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task11__trial0.json
+task  15 trial 0 ok    success=True 409.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task15__trial0.json
+task  14 trial 0 ok    success=True 919.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task14__trial0.json
+task  16 trial 0 ok    success=True 346.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F3-D4/task16__trial0.json
+=== F4-D0 2026-11-27 10:33:57 commit 2294d8b
+task   2 trial 0 ok    success=False 107.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task2__trial0.json
+task   1 trial 0 ok    success=False 68.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task1__trial0.json
+task   0 trial 0 ok    success=False 59.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task0__trial0.json
+task   3 trial 0 ok    success=False 45.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task3__trial0.json
+task  11 trial 0 ok    success=False 150.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task11__trial0.json
+task  13 trial 0 ok    success=False 87.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task13__trial0.json
+task   4 trial 0 ok    success=False 102.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task4__trial0.json
+task  14 trial 0 ok    success=False 56.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task14__trial0.json
+task  15 trial 0 no_target success=False 293.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task15__trial0.json
+task  16 trial 0 ok    success=False 265.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D0/task16__trial0.json
+=== F4-D2 2026-11-27 10:55:50 commit 2294d8b
+task   0 trial 0 ok    success=False 130.1s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task0__trial0.json
+task   2 trial 0 ok    success=False 97.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task2__trial0.json
+task   3 trial 0 ok    success=True 166.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task3__trial0.json
+task   4 trial 0 ok    success=False 151.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task4__trial0.json
+task  13 trial 0 ok    success=False 135.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task13__trial0.json
+task   1 trial 0 ok    success=False 290.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task1__trial0.json
+task  15 trial 0 ok    success=False 167.9s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task15__trial0.json
+task  11 trial 0 no_target success=False 481.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task11__trial0.json
+task  14 trial 0 ok    success=False 176.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task14__trial0.json
+task  16 trial 0 ok    success=False 158.2s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D2/task16__trial0.json
+=== F4-D4 2026-11-27 11:31:02 commit 2294d8b
+task   3 trial 0 no_target success=False 179.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task3__trial0.json
+task   2 trial 0 ok    success=False 80.0s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task2__trial0.json
+task   0 trial 0 ok    success=False 71.3s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task0__trial0.json
+task   1 trial 0 ok    success=False 62.8s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task1__trial0.json
+task   4 trial 0 no_target success=False 73.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task4__trial0.json
+task  14 trial 0 ok    success=False 84.6s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task14__trial0.json
+task  13 trial 0 ok    success=False 57.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task13__trial0.json
+task  11 trial 0 no_target success=False 596.5s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task11__trial0.json
+task  15 trial 0 ok    success=False 74.4s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task15__trial0.json
+task  16 trial 0 ok    success=False 39.7s -> /content/drive/MyDrive/lost-in-handoff/runs/colab_a100/pilot/qwen3-8b/F4-D4/task16__trial0.json

@@ -111,7 +111,7 @@ def fault_targets(task_id: str, fault: str) -> dict:
 
 
 CONDITIONS: dict[str, Spec] = _make()
-BASELINE = "clean-D0"  # fault conditions are compared with this, task by task
+BASELINE = "clean-D0"  # the pipeline baseline; a fault condition is compared with clean-<its defense>
 
 # Records saved before this file existed carry only the runner's label. Clean records map as below;
 # score_eval uses this so the Colab pilot in runs/colab_a100/ scores without re-running anything.

@@ -48,3 +48,10 @@ def test_no_op_tasks_still_score():
     still be scored against their gold replay, not crash with KeyError."""
     from handoff import metrics as M
     assert M._gold_hash("10") and M._gold_hash("12")
+
+
+def test_fault_induced_failure_skips_runs_where_the_fault_never_fired():
+    base = [{"task_id": "0", "_success": True}, {"task_id": "1", "_success": True}]
+    fault = [{"task_id": "0", "_success": False, "faults": [{"id": "F1_task0", "fired": True}]},
+             {"task_id": "1", "_success": False, "faults": [{"id": "F1_task1", "fired": False}]}]
+    assert M.fault_induced_failures(fault, base) == (1, 1)  # task 1 never saw the fault

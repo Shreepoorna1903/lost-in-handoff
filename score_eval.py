@@ -1,11 +1,12 @@
 """Score saved run records. No model calls, so it can be rerun whenever a metric changes.
 
     python score_eval.py runs/qwen3-8b
-    python score_eval.py runs/colab_a100/baseline        # the Colab pilot
+    python score_eval.py runs/colab_a100/pilot/qwen3-8b  # the FP3 pilot
 
 For each condition: runs, errors, success rate with a 95% interval, and mean cost per run. For fault
 conditions: how often the fault fired, how often the planted value was passed on and written, and
-fault-induced failures against the clean baseline (clean-D0), paired by task. F4 runs where the
+fault-induced failures against the clean run of the same defense (F2-D4 against clean-D4), paired
+by task, leaving out runs where the fault never fired. F4 runs where the
 researcher never wrote the target value (status "no_target") had no fault to plant: they are counted
 in the no_target column and left out of every other number. Writes summary.csv into the folder.
 """
@@ -18,7 +19,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from handoff import metrics as M
-from handoff.conditions import BASELINE, CONDITIONS
+from handoff.conditions import CONDITIONS
 
 
 def pct(k: int, n: int) -> str:
@@ -56,7 +57,8 @@ def main() -> None:
         if CONDITIONS.get(c) and CONDITIONS[c].fault:
             po = [M.passed_on(r) for r in runs if M.passed_on(r) is not None]
             ww = [M.wrong_value_write(r) for r in runs if M.wrong_value_write(r) is not None]
-            fi, elig = M.fault_induced_failures(runs, by_cond.get(BASELINE, []))
+            base = f"clean-{CONDITIONS[c].defense}"  # same defense, no fault
+            fi, elig = M.fault_induced_failures(runs, by_cond.get(base, []))
             fired = [M.fault_fired(r) for r in runs if M.fault_fired(r) is not None]
             row.update(no_target=no_target.get(c, 0), fault_fired=pct(sum(fired), len(fired)),
                        passed_on=pct(sum(po), len(po)), wrong_value_write=pct(sum(ww), len(ww)),
