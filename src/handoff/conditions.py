@@ -77,9 +77,9 @@ def _make() -> dict[str, Spec]:
 
 
 def fault_injection_built(fault: str) -> bool:
-    """Fault constructors exist, but run_eval cannot plant them until per-task targets exist
-    (`fault_targets` below). Flip to True once the fault-target script is done."""
-    return False
+    """run_eval plants F1-F3 from the per-task targets (`fault_targets` below) and forks for F4,
+    so a fault condition can run once data/fault_targets.json exists."""
+    return fault in FAULTS and FAULT_TARGETS_FILE.exists()
 
 
 FAULT_TARGETS_FILE = Path(__file__).resolve().parents[2] / "data" / "fault_targets.json"

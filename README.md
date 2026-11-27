@@ -60,7 +60,7 @@ format are the same in every condition; only the fault and the defense change.
 
 ```bash
 .venv/bin/python run_eval.py --condition clean-D0 --limit 10             # 10 tasks, 1 trial each
-.venv/bin/python run_eval.py --condition F2-D1 --tasks 0,2,11 --runs 3   # trial k uses seed k
+.venv/bin/python run_eval.py --condition F2-D2 --tasks 0,2,11 --runs 3   # trial k uses seed k
 .venv/bin/python run_eval.py --condition clean-D0 --limit 10 --shard 1/4 # 4 processes, one Ollama server
 
 .venv/bin/python score_eval.py runs/qwen3-8b                # metric summaries, no model calls
@@ -76,6 +76,14 @@ handoff and tool call (with any injected fault), token usage, timing and the fin
 replay, then prints and saves `summary.csv` per condition. Conditions not built yet are refused
 with the name of the person building them (see `PROGRESS.md`).
 
+Faults are planted where `data/fault_targets.json` says, written by
+`scripts/pick_fault_targets.py` from each task's gold actions (no model calls). F1–F3 change the
+first lookup of the target order (`get_order_details` with that order ID), once, so a second lookup
+returns the true value. F4 is a clean run followed by a fork after the researcher's handoff, with the
+value misreported. If the researcher never wrote that value, the run is saved as `no_target` and
+not retried. `score_eval.py` reports, per fault condition, how many runs had no target, how often the
+fault actually fired, and the RQ1 metrics.
+
 The Colab notebook only installs things and launches these scripts on a GPU; all experiment code is
 in Python scripts. `python -m handoff.cli run --task 0 --topology pipeline --model qwen3:8b --show`
 runs a single ticket and prints its handoffs, for debugging.
@@ -85,6 +93,7 @@ runs a single ticket and prints its handoffs, for debugging.
 ```
 run_eval.py            run a condition on the tasks, save one record per run (scores nothing)
 score_eval.py          score saved records, write summary.csv (no model calls)
+scripts/pick_fault_targets.py   where to plant F1-F4 in each task -> data/fault_targets.json
 src/handoff/
   conditions.py        every condition by name: fault x defense, and what is held fixed
   metrics.py           FP2 metrics computed from saved records
@@ -110,12 +119,12 @@ in `conditions.py`, not a code change.
 | `agents.py` | Agent loop (one tool call per turn), the write-gating verifier |
 | `topologies.py` | LangGraph graphs: single agent and the intake → researcher → executor pipeline |
 | `handoffs.py` | Handoff formats and the rules for what a handoff must carry |
-| `faults.py` | Fault constructors (F1–F3 in tool outputs; F4 text for the false claim) |
+| `faults.py` | Fault constructors (F1–F3 in tool outputs; F4 text for the false claim); `build_faults` turns a target from `data/fault_targets.json` into a fault |
 | `runner.py` | Runs a ticket under a condition; `fork_with_false_claim` edits a handoff at a checkpoint and resumes (F4) |
 | `evaluate.py` | Grading by DB hash vs. gold replay, collateral damage, tracing planted values through handoffs and writes |
 | `constraints.py` | Constraint generation from the earlier scope (not used in the current study) |
 | `conditions.py` | Every condition by name (`CONDITIONS`), what each changes, and which are not built yet |
-| `metrics.py` | FP2 metrics from saved records: success (by replay), 95% interval, passed on, wrong-value write, fault-induced failure, cost. Detection and over-blocking are TODO |
+| `metrics.py` | FP2 metrics from saved records: success (by replay), 95% interval, passed on, wrong-value write, fault-induced failure, whether the fault fired, cost. Detection and over-blocking are TODO |
 | `cli.py` | Debugging commands (`list`, `run --show`, `baseline`) |
 
 `tests/test_offline.py` checks the harness and `tests/test_eval_scripts.py` the conditions and
