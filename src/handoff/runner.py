@@ -108,7 +108,10 @@ def fork_with_false_claim(clean: dict, ticket: Ticket, cond: Condition, cfg: Run
     rt = RUNTIME[config["configurable"]["run_key"]]
     rt["env"] = ToolEnv.restore(target.values.get("tool_log", []))
     rt["usage"] = Usage.from_dict(target.values.get("usage"))
-    new_cfg = graph.update_state(target.config, {"handoffs": hs})
+    forked = graph.update_state(target.config, {"handoffs": hs})
+    # update_state returns only the checkpoint's thread and id; the nodes also need run_key (to find
+    # RUNTIME) and the recursion limit, so carry the original config over and point it at the fork
+    new_cfg = {**config, "configurable": {**config["configurable"], **forked["configurable"]}}
     t0 = time.time()
     state = graph.invoke(None, new_cfg)
     fault = ToolFault(f"false_claim_h{hop}", "false_claim", "(handoff)", hop, lambda s: s, [false_value])

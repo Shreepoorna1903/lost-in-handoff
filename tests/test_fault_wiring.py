@@ -127,3 +127,30 @@ def test_fault_conditions_are_built_where_the_defense_is():
     for f in ("F1", "F2", "F3", "F4"):
         assert CONDITIONS[f"{f}-D0"].built and CONDITIONS[f"{f}-D2"].built and CONDITIONS[f"{f}-D4"].built
         assert not CONDITIONS[f"{f}-D1"].built  # D1, D3, D5 wait on their owners
+
+
+def test_f4_fork_runs_on_the_real_graph(monkeypatch):
+    """The real fork on the real LangGraph pipeline, with the agents faked (no model). The executor
+    after the fork must see the false value; the clean run's executor saw the true one."""
+    from handoff import topologies as T
+    from handoff.agents import AgentResult, RunConfig
+
+    ev = _run_eval()
+    t = fault_targets("0", "F4")
+    seen = []
+
+    def fake_agent(*, name, user, **_):
+        seen.append((name, user))
+        text = f"Exchange item {t['true_value']} in the order." if name == "researcher" else f"{name} done"
+        return AgentResult(final_text=text)
+
+    monkeypatch.setattr(T, "run_agent", fake_agent)
+    r = ev.run_false_claim(TICKETS["0"], CONDITIONS["F4-D0"], RunConfig(model="fake"), t)
+    assert r["status"] == "ok", r
+    executors = [u for n, u in seen if n == "executor"]
+    assert len(executors) == 2  # the clean run, then the replay after the fork
+    assert t["true_value"] in executors[0] and t["false_value"] not in executors[0]
+    assert t["false_value"] in executors[1] and t["true_value"] not in executors[1]
+    assert [n for n, _ in seen].count("researcher") == 1  # the fork does not rerun the researcher
+    assert r["faults"][0]["fired"] and r["taint"]["in_handoffs"] == [False, True]
+    assert r["state"]["handoffs"][1]["content"].count(t["false_value"]) == 1
