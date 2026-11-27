@@ -15,7 +15,11 @@ Names:
 
 from __future__ import annotations
 
+import copy
+import json
 from dataclasses import dataclass, field
+from functools import lru_cache
+from pathlib import Path
 
 from handoff.agents import RunConfig
 from handoff.runner import Condition
@@ -78,14 +82,32 @@ def fault_injection_built(fault: str) -> bool:
     return False
 
 
-def fault_targets(task_id: str, fault: str) -> dict:
-    """Where to plant `fault` in this task: tool, occurrence, JSON path and the wrong value
-    (for F4: handoff hop and true/false value). Picked from the task's gold actions.
+FAULT_TARGETS_FILE = Path(__file__).resolve().parents[2] / "data" / "fault_targets.json"
 
-    TODO (Shreepoorna + Mandar): write the fault-target script, save its output (e.g.
-    data/fault_targets.json), load it here, and set fault_injection_built to True.
+
+@lru_cache(maxsize=1)
+def _load_fault_targets() -> dict:
+    if not FAULT_TARGETS_FILE.exists():
+        raise FileNotFoundError(f"{FAULT_TARGETS_FILE} is missing: run scripts/pick_fault_targets.py")
+    return json.loads(FAULT_TARGETS_FILE.read_text())
+
+
+def fault_targets(task_id: str, fault: str) -> dict:
+    """Where to plant `fault` in this task, from data/fault_targets.json (scripts/pick_fault_targets.py).
+
+    F1-F3: tool, occurrence, path, true_value, wrong_value (and args, the targeted gold call's arguments).
+    F4: hop, true_value, false_value.
     """
-    raise NotImplementedError("fault targets are not picked yet (fault-target script)")
+    if fault not in FAULTS:
+        raise KeyError(f"unknown fault {fault!r}; expected one of {sorted(FAULTS)}")
+    targets = _load_fault_targets()
+    if str(task_id) not in targets:
+        raise KeyError(f"task {task_id} has no fault targets (tasks with targets: "
+                       f"{', '.join(targets)}); rerun scripts/pick_fault_targets.py")
+    entry = targets[str(task_id)]
+    if fault not in entry:
+        raise KeyError(f"task {task_id} has no {fault} target in {FAULT_TARGETS_FILE.name}")
+    return copy.deepcopy(entry[fault])  # callers may edit it; the cache must stay intact
 
 
 CONDITIONS: dict[str, Spec] = _make()
