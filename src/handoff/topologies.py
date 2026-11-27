@@ -114,12 +114,16 @@ def _note(role: str) -> str:
     return INTAKE_NOTE if role == "intake" else READ_ONLY_NOTE
 
 
-def _system(role: str, policy: str, fmt: str | None, cfg: RunConfig, last: bool) -> str:
+def _system(role: str, policy: str, fmt: str | None, cfg: RunConfig, last: bool,
+            has_tools: bool = True) -> str:
     note = _note(role)
     s = (f"{ROLE_DESC[role]}\n\nStore policy:\n{policy}\n\n{note}\n\n"
          "Make at most one tool call at a time.")
     if fmt and not last:
-        s += "\n\n" + H.instruction(fmt, cfg.provenance)
+        # Provenance (D4/D5) tags facts with the tool call they came from. An agent with no tools (the
+        # intake) has nothing to tag: in the pilot, told to tag every fact, it dropped the customer's
+        # email and zip on tasks 3 and 4 in every D4 run. So it gets the plain instruction.
+        s += "\n\n" + H.instruction(fmt, cfg.provenance and has_tools)
     return s
 
 
@@ -172,7 +176,7 @@ def _agent_node(role: str, tools: list[str], idx: int, n: int, fmt: str | None):
         env: ToolEnv = rt["env"]
         cfg: RunConfig = rt["cfg"]
         last = idx == n - 1
-        res = run_agent(name=role, system=_system(role, env.policy(), fmt, cfg, last),
+        res = run_agent(name=role, system=_system(role, env.policy(), fmt, cfg, last, bool(tools)),
                         user=_incoming(state, rt, idx == 0), tools=tools, env=env, cfg=cfg,
                         usage=rt["usage"], original_request=rt["request"], wrap_up=not last)
         out: TeamState = {

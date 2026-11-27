@@ -162,7 +162,7 @@ def run_agent(*, name: str, system: str, user: str, tools: list[str], env: ToolE
     """`wrap_up`: this agent's final text becomes a handoff, so a turn-limited or empty ending gets
     one extra tool-free call to write it."""
     schemas = env.schemas(tools)
-    if cfg.provenance:
+    if cfg.provenance and tools:  # an agent with no tools has no tool calls to look up
         schemas = schemas + [PROVENANCE_SCHEMA]
     # decided by the role's environment tools, so adding the provenance tool never flips it
     llm = cfg.llm(think=cfg.think if tools else cfg.no_tool_think)
