@@ -243,3 +243,21 @@ def test_rq2_pilot_evidence_and_write_gate(monkeypatch):
             assert "get_order_details" in verifier.seen[0]
         assert result["success"] == (defense != "D1")
         assert result["usage"]["verifier_blocks"] == (defense == "D1")
+        # the record says which RQ2 setup ran, not only the condition name
+        assert result["verifier_matched"] == (defense == "D1")
+        assert result["executor_full_information"] == (defense == "D3")
+
+
+def test_d1_and_d2_verifier_prompts_differ_only_in_their_sources():
+    """RQ2 compares D1 with D2 to isolate information; the instructions must be the same."""
+    from handoff.agents import MATCHED_VERIFIER_PROMPT, VERIFIER_PROMPT
+
+    for prompt in (VERIFIER_PROMPT, MATCHED_VERIFIER_PROMPT):
+        assert "(IDs, prices, statuses must match)" in prompt
+        assert "every\nrule stated in" in prompt
+    first = lambda p: p.split("\n", 1)[0]
+    last = lambda p: p.rsplit("\n", 1)[-1]
+    assert first(VERIFIER_PROMPT) == first(MATCHED_VERIFIER_PROMPT)
+    assert last(VERIFIER_PROMPT) == last(MATCHED_VERIFIER_PROMPT)
+    assert "handoff" in MATCHED_VERIFIER_PROMPT and "handoff" not in VERIFIER_PROMPT
+    assert "tool results" in VERIFIER_PROMPT and "tool results" not in MATCHED_VERIFIER_PROMPT

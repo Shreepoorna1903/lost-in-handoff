@@ -58,6 +58,8 @@ def _score(ticket: Ticket, cond: Condition, cfg: RunConfig, env: ToolEnv, state:
         "provenance": cfg.provenance,
         "provenance_requery": cfg.provenance_requery,
         "verifier": cfg.verifier,
+        "verifier_matched": cfg.verifier_matched,
+        "executor_full_information": cfg.executor_full_information,
         # fired: the fault changed a tool output (or, for a false claim, the handoff was rewritten).
         # A run whose fault never fired did not test the fault; score_eval reports these separately.
         "faults": [{"id": f.fault_id, "kind": f.kind, "tool": f.tool, "occurrence": f.occurrence,

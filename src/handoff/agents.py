@@ -147,8 +147,11 @@ rule stated in it, and (2) the tool results gathered so far (IDs, prices, status
 Reply with exactly one line: either `APPROVE` or `REJECT: <short reason>`."""
 
 
+# D1: the same prompt as D2 sentence for sentence; only the sources change (the executor's handoff
+# instead of the ticket and the tool results), so D1 vs D2 differs in information, not in instructions.
 MATCHED_VERIFIER_PROMPT = """You are a verifier that gates write actions in a retail customer-service system.
-Approve the proposed action only if it is consistent with the request, constraints, and facts in the handoff.
+Approve the proposed action only if it is consistent with (1) the customer's request and every
+rule stated in the handoff, and (2) the facts given in the handoff (IDs, prices, statuses must match).
 Reply with exactly one line: either `APPROVE` or `REJECT: <short reason>`."""
 
 
