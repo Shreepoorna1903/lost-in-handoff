@@ -10,7 +10,7 @@ definitions only (no access to `src/`, the tests, `summary.csv` or the metric ou
 (a) rule-based labels and (b) its own judgement of whether an agent actually noticed the planted fact,
 with quoted evidence (`reviewer_labels.json`). The metric outputs (`metric_labels.json`) were then
 compared field by field. A team member (Puneet) reviewed the summarised disagreements and agreed with
-the reviewer's reading in all three groups below. He also read five transcripts in full: runs 2 and 14 (one each for groups A and B) and runs 1, 5
+the reviewer's reading in all three groups below. He also read key excerpts of five runs, extracted from the raw records: the handoff to the executor, the executor's write attempts and replies, the verifier's messages, and for run 14 the tool log. These were not the full transcripts: runs 2 and 14 (one each for groups A and B) and runs 1, 5
 and 20, where the metric and the reviewer agreed. He agreed with the metric on all three:
 - **Run 1:** noticed. The verifier named the false ID, blocked the return, and nothing wrong was
   written.
