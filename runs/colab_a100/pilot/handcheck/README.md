@@ -10,8 +10,14 @@ definitions only (no access to `src/`, the tests, `summary.csv` or the metric ou
 (a) rule-based labels and (b) its own judgement of whether an agent actually noticed the planted fact,
 with quoted evidence (`reviewer_labels.json`). The metric outputs (`metric_labels.json`) were then
 compared field by field. A team member (Puneet) reviewed the summarised disagreements and agreed with
-the reviewer's reading in all three groups below. He also read the transcripts of sample runs 2 and 14
-in full (one per group A and B):
+the reviewer's reading in all three groups below. He also read five transcripts in full: runs 2 and 14 (one each for groups A and B) and runs 1, 5
+and 20, where the metric and the reviewer agreed. He agreed with the metric on all three:
+- **Run 1:** noticed. The verifier named the false ID, blocked the return, and nothing wrong was
+  written.
+- **Run 5:** not detected. The executor wrote the planted keyboard ID.
+- **Run 20:** a correct write was wrongly blocked and lost.
+
+For runs 2 and 14:
 - **Run 2:** noticed but not named by value. The verifier rejected the planted keyboard as "linear
   switches instead of clicky" without quoting its ID.
 - **Run 14:** corrected but not demonstrably noticed. The researcher repeated the order lookup and
@@ -23,9 +29,26 @@ each agent's visible reply. In run 14 the researcher's seven tool calls carry no
 all. Every "did the agent notice?" judgement here rests on visible output only. Saving the reasoning
 text in the run records would let the full study judge this better.
 
+**Two passes over the same 20 runs.**
+- **Pass 1** covered detection and over-blocking (`reviewer_labels.json`, `metric_labels.json`).
+- **Pass 2** covered the RQ1 metrics: success, fault_fired, passed_on, the clean run's success, and
+  fault-induced failure (`reviewer_labels_rq1.json`, `metric_labels_rq1.json`). `sample.json` lists
+  the clean run used for each fault run.
+
 **Result 1: the code matches its definitions.** All 9 fields (requeried, traced, verifier_named,
 refused, detected, wrong_value_write, blocks, over_blocking, lost_correct_write) matched on all 20 runs:
 0 mismatches.
+
+Pass 2 matched on 99 of 100 labels. The one mismatch exposed a real difference between the code and
+FP2's definition of `passed_on`:
+- The old code was case-sensitive. In sample run 16 the planted "pending" appears as "(Pending)".
+- It checked every handoff, the intake's included.
+- It did not exclude values already present in the clean run's handoff.
+
+`passed_on` now follows FP2: the researcher's handoff to the executor, case-insensitive, excluding
+targets already in the clean handoff, F1–F3 only. Pilot effect: F1 moves by one run per defense
+(D0 5/10 → 4/9, D2 5/10 → 6/9, D4 5/10 → 4/9), F2-D4 goes 9/10 → 8/9, F2-D0/D2 and F3 are unchanged.
+F4 is no longer reported, because its handoff is edited, so the value is in it by construction.
 
 **Result 2: `detected` is a weak measure of awareness.** Against the common-sense judgement, `detected`
 agreed on 9 of 18 fault runs. The sample was chosen toward borderline cases, so this is agreement on
@@ -48,6 +71,12 @@ awareness.
 Pilot numbers for B (the upper bound is meaningful mainly for F4; on F2 it counts blocks given for
 unrelated reasons): F4-D2 named 6/9, blocked-planted 9/9; F2-D2 named 0/10, blocked-planted 2/10
 (the F2 blocks gave unrelated reasons).
+
+**Finding for RQ2 (from run 20).** The verifier judges each write call on its own. When the executor
+sends several writes in one turn (two cancels and a return), the verifier cannot see the others. It
+rejected a correct cancel because "the original request was to cancel all pending orders". The
+executor then reported both cancels as done. So per-write checking loses context on multi-action
+requests and can block writes that are only correct as part of the batch.
 
 **For the report:** the metrics are validated against their operational definitions; that does not
 establish that `detected` measures agent awareness. Keep the two conclusions separate.

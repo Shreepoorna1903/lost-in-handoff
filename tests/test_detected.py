@@ -173,3 +173,31 @@ def test_tagged_handoff_only_with_provenance():
     assert M.tagged_handoff(r) is True
     h["content"] = "order #W1"
     assert M.tagged_handoff(r) is False
+
+
+# ---------------------------------------------------------------- passed_on (FP2 definition)
+def test_passed_on_is_case_insensitive():
+    """Hand-check sample run 16: the planted status "pending" is written "(Pending)" in the handoff."""
+    r, clean = _rec("F1-D2", "13"), _rec("clean-D2", "13")
+    assert "(Pending)" in M._to_executor(r)
+    assert M.passed_on(r, clean) is True
+
+
+def test_passed_on_excludes_values_already_in_the_clean_handoff():
+    r, clean = _rec("F1-D0", "16"), _rec("clean-D0", "16")
+    assert fault_targets("16", "F1")["wrong_value"] in M._to_executor(clean).lower()
+    assert M.passed_on(r, clean) is None
+    assert M.passed_on(r) is True  # without the clean run there is nothing to exclude against
+
+
+def test_passed_on_reads_only_the_handoff_to_the_executor():
+    r = copy.deepcopy(_rec("F2-D0", "0"))
+    v = fault_targets("0", "F2")["wrong_value"]
+    for h in r["state"]["handoffs"]:
+        h["content"] = h["content"].replace(v, "X") if h["to"] == "executor" else h["content"] + " " + v
+    assert M.passed_on(r) is False  # the value only in the intake handoff does not count
+
+
+def test_passed_on_not_for_f4_or_clean_runs():
+    assert M.passed_on(_rec("F4-D0", "0")) is None  # the handoff is edited: passed on by construction
+    assert M.passed_on(_rec("clean-D0", "0")) is None

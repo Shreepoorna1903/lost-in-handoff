@@ -23,7 +23,8 @@
      "payment_method_id": "credit_card_3124723"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task13__trial0.json"
  },
  {
   "id": 2,
@@ -52,7 +53,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task0__trial0.json"
  },
  {
   "id": 3,
@@ -79,7 +81,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task3__trial0.json"
  },
  {
   "id": 4,
@@ -106,7 +109,8 @@
      "payment_method_id": "paypal_5364164"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task15__trial0.json"
  },
  {
   "id": 5,
@@ -135,7 +139,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D0/task0__trial0.json"
  },
  {
   "id": 6,
@@ -172,7 +177,8 @@
      "payment_method_id": "paypal_9497703"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D0/task11__trial0.json"
  },
  {
   "id": 7,
@@ -210,7 +216,8 @@
      "payment_method_id": "paypal_5364164"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D0/task16__trial0.json"
  },
  {
   "id": 8,
@@ -237,7 +244,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D4/task3__trial0.json"
  },
  {
   "id": 9,
@@ -275,7 +283,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task3__trial0.json"
  },
  {
   "id": 10,
@@ -330,7 +339,8 @@
      "payment_method_id": "paypal_5364164"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task16__trial0.json"
  },
  {
   "id": 11,
@@ -376,7 +386,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task0__trial0.json"
  },
  {
   "id": 12,
@@ -419,7 +430,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D0/task2__trial0.json"
  },
  {
   "id": 13,
@@ -462,7 +474,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D4/task2__trial0.json"
  },
  {
   "id": 14,
@@ -506,7 +519,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D4/task1__trial0.json"
  },
  {
   "id": 15,
@@ -544,7 +558,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task0__trial0.json"
  },
  {
   "id": 16,
@@ -579,7 +594,8 @@
      "payment_method_id": "credit_card_3124723"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D2/task13__trial0.json"
  },
  {
   "id": 17,
@@ -617,7 +633,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D0/task0__trial0.json"
  },
  {
   "id": 18,
@@ -654,7 +671,8 @@
      "payment_method_id": "credit_card_9513926"
     }
    }
-  ]
+  ],
+  "clean_same_defense_file": "runs/colab_a100/pilot/qwen3-8b/clean-D4/task3__trial0.json"
  },
  {
   "id": 19,

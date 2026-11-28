@@ -67,7 +67,10 @@ def main() -> None:
                        mean_requeries=round(sum(r.get("usage", {}).get("requeries", 0) for r in runs) / len(runs), 2),
                        tagged_handoffs=pct(sum(tagged), len(tagged)))
         if CONDITIONS.get(c) and CONDITIONS[c].fault:
-            po = [M.passed_on(r) for r in runs if M.passed_on(r) is not None]
+            # the clean run of the same task and defense, for passed_on's clean-run exclusion
+            clean = {(b["task_id"], b.get("trial", 0)): b for b in by_cond.get(f"clean-{CONDITIONS[c].defense}", [])}
+            pairs = [(r, clean.get((r["task_id"], r.get("trial", 0)))) for r in runs]
+            po = [M.passed_on(r, cl) for r, cl in pairs if M.passed_on(r, cl) is not None]
             ww = [M.wrong_value_write(r) for r in runs if M.wrong_value_write(r) is not None]
             base = f"clean-{CONDITIONS[c].defense}"  # same defense, no fault
             fi, elig = M.fault_induced_failures(runs, by_cond.get(base, []))

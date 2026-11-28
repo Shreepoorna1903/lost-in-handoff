@@ -6,7 +6,8 @@ Implemented:
                         writes (ToolEnv.restore), not read from the saved flag.
   success_ci            Wilson 95% interval for a success rate
   fault_fired           the planted fault changed a tool output or handoff  (from record["faults"])
-  passed_on             the planted value appears in a later handoff        (from record["taint"])
+  passed_on             F1-F3: the planted value appears in the researcher's handoff to the executor,
+                        and not in that handoff in the clean run (FP2 definition; case-insensitive)
   wrong_value_write     the planted value appears in a write call's args    (from record["taint"])
   fault_induced_failure a task the same defense's clean run solved fails under the fault (paired
                         by task; runs where the fault never fired are left out)
@@ -123,9 +124,30 @@ def fault_fired(r: dict) -> bool | None:
     return None if not fs else all(f.get("fired", True) for f in fs)
 
 
-def passed_on(r: dict) -> bool | None:
-    t = r.get("taint")
-    return None if not t else any(t.get("in_handoffs", []))
+def _to_executor(r: dict) -> str:
+    """The researcher's handoff to the executor (the last handoff addressed to it)."""
+    hs = [h for h in r.get("state", {}).get("handoffs", []) if h.get("to") == "executor"]
+    return hs[-1].get("content", "") if hs else ""
+
+
+def passed_on(r: dict, clean: dict | None = None) -> bool | None:
+    """FP2: for F1-F3, the planted value appears in the researcher's handoff to the executor, counted
+    only for targets whose value does not appear in that handoff in the clean run (`clean`: the clean
+    run of the same task and defense; without it the exclusion is skipped). Case-insensitive, since
+    F1 values are words ("pending" is written "Pending"). None for F4 (the handoff is edited, so the
+    value is in it by construction), clean, no_target and not-fired runs, and excluded targets.
+
+    The pilot's earlier version read record["taint"]: any handoff (intake included), case-sensitive,
+    no clean-run exclusion. The 20-run hand-check found the difference (sample run 16: "(Pending)")."""
+    fault = r.get("fault")
+    if fault not in ("F1", "F2", "F3") or r.get("status") in ("no_target", "error") or "state" not in r:
+        return None
+    if fault_fired(r) is not True:
+        return None
+    value = str(fault_targets(r["task_id"], fault)["wrong_value"]).lower()
+    if clean is not None and value in _to_executor(clean).lower():
+        return None
+    return value in _to_executor(r).lower()
 
 
 def wrong_value_write(r: dict) -> bool | None:
