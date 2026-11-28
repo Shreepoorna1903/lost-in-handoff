@@ -194,3 +194,70 @@ def test_role_notes():
     assert _note("researcher") == READ_ONLY_NOTE and _note("intake") == INTAKE_NOTE
     assert "Never make up or guess an ID" in INTAKE_NOTE and "exact IDs" not in INTAKE_NOTE
     assert "carry out every requested action" not in READ_ONLY_NOTE + INTAKE_NOTE
+
+
+def test_rq2_pilot_evidence_and_write_gate(monkeypatch):
+    from langchain_core.messages import AIMessage
+    from handoff.agents import RunConfig
+    from handoff.conditions import CONDITIONS
+    from handoff.runner import run_ticket
+
+    ticket = _ticket("0")
+    gold = ticket.expected_writes[0]
+
+    for defense in ("D0", "D1", "D2", "D3"):
+        intake = _ScriptedLLM([AIMessage(content="intake summary")])
+        researcher = _ScriptedLLM([
+            AIMessage(content="", tool_calls=[{
+                "name": "get_order_details", "args": {"order_id": "#W2378156"}, "id": "read",
+            }]),
+            AIMessage(content="research handoff"),
+            AIMessage(content="research handoff"),
+        ])
+        executor = _ScriptedLLM([
+            AIMessage(content="", tool_calls=[{
+                "name": gold["name"], "args": gold["arguments"], "id": "write",
+            }]),
+            AIMessage(content="finished"),
+            AIMessage(content="finished"),
+        ])
+        verifier = _ScriptedLLM([AIMessage(content="REJECT: test" if defense == "D1" else "APPROVE")])
+        models = iter([intake, researcher, executor, verifier])
+        monkeypatch.setattr(RunConfig, "llm", lambda self, **kw: next(models))
+        spec = CONDITIONS[f"clean-{defense}"]
+        assert spec.built
+        assert all(CONDITIONS[f"F{i}-{defense}"].built for i in range(1, 5))
+        result = run_ticket(ticket, spec.condition(), spec.run_config("qwen3:8b"))
+        assert "research handoff" in executor.seen[0]
+        assert ("#W2378156" in executor.seen[0]) == (defense == "D3")
+        assert ("get_order_details" in executor.seen[0]) == (defense == "D3")
+        assert len(verifier.seen) == (defense in ("D1", "D2"))
+        if defense == "D1":
+            assert verifier.seen[0] == (
+                f"Handoff from the previous agent:\n\nresearch handoff\n\n"
+                f"PROPOSED ACTION: {gold['name']}({json.dumps(gold['arguments'])})"
+            )
+            assert all(not entry["is_write"] for entry in result["state"]["tool_log"])
+        if defense == "D2":
+            assert "Yusuf Rossi" in verifier.seen[0]
+            assert "get_order_details" in verifier.seen[0]
+        assert result["success"] == (defense != "D1")
+        assert result["usage"]["verifier_blocks"] == (defense == "D1")
+        # the record says which RQ2 setup ran, not only the condition name
+        assert result["verifier_matched"] == (defense == "D1")
+        assert result["executor_full_information"] == (defense == "D3")
+
+
+def test_d1_and_d2_verifier_prompts_differ_only_in_their_sources():
+    """RQ2 compares D1 with D2 to isolate information; the instructions must be the same."""
+    from handoff.agents import MATCHED_VERIFIER_PROMPT, VERIFIER_PROMPT
+
+    for prompt in (VERIFIER_PROMPT, MATCHED_VERIFIER_PROMPT):
+        assert "(IDs, prices, statuses must match)" in prompt
+        assert "every\nrule stated in" in prompt
+    first = lambda p: p.split("\n", 1)[0]
+    last = lambda p: p.rsplit("\n", 1)[-1]
+    assert first(VERIFIER_PROMPT) == first(MATCHED_VERIFIER_PROMPT)
+    assert last(VERIFIER_PROMPT) == last(MATCHED_VERIFIER_PROMPT)
+    assert "handoff" in MATCHED_VERIFIER_PROMPT and "handoff" not in VERIFIER_PROMPT
+    assert "tool results" in VERIFIER_PROMPT and "tool results" not in MATCHED_VERIFIER_PROMPT
