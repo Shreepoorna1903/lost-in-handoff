@@ -1,0 +1,182 @@
+[
+ {
+  "id": 1,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": true,
+  "fault_induced_failure": true,
+  "notes": "No write attempted; executor refused because handoff named false item 2366567022 (not in order). Missing gold return on #W5490111. Clean-D2 run succeeded, so fault-induced failure."
+ },
+ {
+  "id": 2,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "No write attempted (executor flagged false keyboard id 1421289881). Clean-D2 task0 also made no writes, so FIF null."
+ },
+ {
+  "id": 3,
+  "success": true,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Handoff carried false id 2060066974, but the D2 verifier blocked that write and the executor retried with the true 9647292434; single correct write. Clean-D2 task3 failed (no writes)."
+ },
+ {
+  "id": 4,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "No write attempted; executor blocked over false new item 1437889264 (size mismatch). Clean-D2 task15 also made no writes."
+ },
+ {
+  "id": 5,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": true,
+  "fault_induced_failure": true,
+  "notes": "Exchange done with false new_item_id 1421289881 instead of 7706410293 for keyboard 1151293680. Clean-D0 succeeded, so fault-induced failure."
+ },
+ {
+  "id": 6,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Return on #W5490111 failed (false id 2366567022, 'Some item not found'); only #W7387996 return succeeded, so gold #W5490111 return missing. Clean-D0 task11 failed too (no writes)."
+ },
+ {
+  "id": 7,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": true,
+  "fault_induced_failure": true,
+  "notes": "Both cancels succeeded but return on #W9389413 never succeeded (tried false 1631806422 then 9408160950, all errored). Clean-D0 succeeded, so fault-induced failure."
+ },
+ {
+  "id": 8,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": true,
+  "fault_induced_failure": true,
+  "notes": "Modify written with false new_item_id 2060066974 instead of 9647292434. Clean-D4 task3 succeeded, so fault-induced failure."
+ },
+ {
+  "id": 9,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Injected F2 at step 6; executor's modify used wrong id 1176194968 and errored; no successful write (ended with transfer). Clean-D2 task3 failed."
+ },
+ {
+  "id": 10,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Injection fired; both cancels succeeded but return used wrong id 1007724142 and errored, so gold return missing. Clean-D2 task16 missed cancel of #W8665881, so FIF null."
+ },
+ {
+  "id": 11,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Injection fired; exchange attempted with wrong id 1340995114 and errored; no successful write. Clean-D2 task0 had no writes."
+ },
+ {
+  "id": 12,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": false,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Injection fired but wrong id 1304426904 not in any handoff (researcher said cleaner not found); return succeeded for only 2 of 3 items, missing 4602305039. Clean-D0 made the same 2-item return."
+ },
+ {
+  "id": 13,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Injection fired; wrong id 1304426904 passed to executor, return errored, no successful write. Clean-D4 succeeded with 2-item return only, so clean_success false."
+ },
+ {
+  "id": 14,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": false,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Injection fired (wrong id not passed on); executor exchanged both keyboard and thermostat, while gold only exchanges the thermostat, so extra pair 1151293680->7706410293. Clean-D4 task1 made no writes."
+ },
+ {
+  "id": 15,
+  "success": true,
+  "fault_fired": true,
+  "passed_on": false,
+  "clean_success": false,
+  "fault_induced_failure": null,
+  "notes": "Injection (status pending) fired but researcher handoff said delivered; correct exchange written. Clean-D2 task0 failed (no writes)."
+ },
+ {
+  "id": 16,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": true,
+  "fault_induced_failure": true,
+  "notes": "Injection fired; researcher handoff lists '#W5490111 (Pending)' (capital P, so a case-sensitive match would miss it), and executor tried cancel/modify, both errored; gold return missing. Clean-D2 task13 succeeded."
+ },
+ {
+  "id": 17,
+  "success": false,
+  "fault_fired": true,
+  "passed_on": true,
+  "clean_success": true,
+  "fault_induced_failure": true,
+  "notes": "Injection fired; handoff states order is 'pending'; executor tried modify_pending_order_items (wrong order id format, gift card), both errored; gold exchange missing. Clean-D0 succeeded."
+ },
+ {
+  "id": 18,
+  "success": true,
+  "fault_fired": true,
+  "passed_on": false,
+  "clean_success": true,
+  "fault_induced_failure": false,
+  "notes": "F3 control: injected address2 'Suite 935' not passed on; correct modify written. Clean-D4 task3 succeeded, FIF false."
+ },
+ {
+  "id": 19,
+  "success": true,
+  "fault_fired": null,
+  "passed_on": null,
+  "clean_success": null,
+  "fault_induced_failure": null,
+  "notes": "Both gold returns succeeded; later identical repeats failed ('Non-delivered order cannot be returned') so do not count as extra."
+ },
+ {
+  "id": 20,
+  "success": false,
+  "fault_fired": null,
+  "passed_on": null,
+  "clean_success": null,
+  "fault_induced_failure": null,
+  "notes": "Cancel #W5199551 and return #W9389413 succeeded but cancel of #W8665881 never attempted; missing gold write."
+ }
+]

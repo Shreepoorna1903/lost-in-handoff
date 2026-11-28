@@ -1,0 +1,312 @@
+[
+ {
+  "id": 1,
+  "condition": "F4-D2",
+  "task": "13",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": true,
+   "refused": false
+  },
+  "detected": true,
+  "wrong_value_write": false,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 1
+ },
+ {
+  "id": 2,
+  "condition": "F4-D2",
+  "task": "0",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": false
+  },
+  "detected": false,
+  "wrong_value_write": false,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 2
+ },
+ {
+  "id": 3,
+  "condition": "F4-D2",
+  "task": "3",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": true,
+   "refused": false
+  },
+  "detected": true,
+  "wrong_value_write": false,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 1
+ },
+ {
+  "id": 4,
+  "condition": "F4-D2",
+  "task": "15",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": false
+  },
+  "detected": false,
+  "wrong_value_write": false,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 1
+ },
+ {
+  "id": 5,
+  "condition": "F4-D0",
+  "task": "0",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": false
+  },
+  "detected": false,
+  "wrong_value_write": true,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 6,
+  "condition": "F4-D0",
+  "task": "11",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": false
+  },
+  "detected": false,
+  "wrong_value_write": true,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 7,
+  "condition": "F4-D0",
+  "task": "16",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": false
+  },
+  "detected": false,
+  "wrong_value_write": true,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 8,
+  "condition": "F4-D4",
+  "task": "3",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": false
+  },
+  "detected": false,
+  "wrong_value_write": true,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 9,
+  "condition": "F2-D2",
+  "task": "3",
+  "signals": {
+   "requeried": true,
+   "traced": false,
+   "verifier_named": false,
+   "refused": null
+  },
+  "detected": true,
+  "wrong_value_write": true,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 1
+ },
+ {
+  "id": 10,
+  "condition": "F2-D2",
+  "task": "16",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": null
+  },
+  "detected": false,
+  "wrong_value_write": true,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 5
+ },
+ {
+  "id": 11,
+  "condition": "F2-D2",
+  "task": "0",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": null
+  },
+  "detected": false,
+  "wrong_value_write": true,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 0
+ },
+ {
+  "id": 12,
+  "condition": "F2-D0",
+  "task": "2",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": null
+  },
+  "detected": false,
+  "wrong_value_write": false,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 13,
+  "condition": "F2-D4",
+  "task": "2",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": false,
+   "refused": null
+  },
+  "detected": false,
+  "wrong_value_write": true,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 14,
+  "condition": "F2-D4",
+  "task": "1",
+  "signals": {
+   "requeried": true,
+   "traced": false,
+   "verifier_named": false,
+   "refused": null
+  },
+  "detected": true,
+  "wrong_value_write": false,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 15,
+  "condition": "F1-D2",
+  "task": "0",
+  "signals": {
+   "requeried": true,
+   "traced": false,
+   "verifier_named": null,
+   "refused": null
+  },
+  "detected": true,
+  "wrong_value_write": false,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 0
+ },
+ {
+  "id": 16,
+  "condition": "F1-D2",
+  "task": "13",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": null,
+   "refused": null
+  },
+  "detected": false,
+  "wrong_value_write": false,
+  "over_blocking": 0,
+  "lost_correct_write": false,
+  "blocks": 5
+ },
+ {
+  "id": 17,
+  "condition": "F1-D0",
+  "task": "0",
+  "signals": {
+   "requeried": false,
+   "traced": false,
+   "verifier_named": null,
+   "refused": null
+  },
+  "detected": false,
+  "wrong_value_write": false,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 18,
+  "condition": "F3-D4",
+  "task": "3",
+  "signals": {
+   "requeried": true,
+   "traced": false,
+   "verifier_named": null,
+   "refused": null
+  },
+  "detected": true,
+  "wrong_value_write": false,
+  "over_blocking": null,
+  "lost_correct_write": null,
+  "blocks": 0
+ },
+ {
+  "id": 19,
+  "condition": "clean-D2",
+  "task": "11",
+  "signals": null,
+  "detected": null,
+  "wrong_value_write": null,
+  "over_blocking": 4,
+  "lost_correct_write": false,
+  "blocks": 4
+ },
+ {
+  "id": 20,
+  "condition": "clean-D2",
+  "task": "16",
+  "signals": null,
+  "detected": null,
+  "wrong_value_write": null,
+  "over_blocking": 1,
+  "lost_correct_write": true,
+  "blocks": 1
+ }
+]
